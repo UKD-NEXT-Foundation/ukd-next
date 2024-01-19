@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from 
 import { AuthSessionsService } from './auth-sessions.service';
 import { CreateAuthSessionDto } from './dto/create-auth-session.dto';
 import { UpdateAuthSessionDto } from './dto/update-auth-session.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth Sessions')
 @Controller('auth-sessions')
 export class AuthSessionsController {
   constructor(private readonly authSessionsService: AuthSessionsService) {}
