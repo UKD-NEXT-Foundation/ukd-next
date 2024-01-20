@@ -24,9 +24,10 @@ export class AuthSessionsService {
     return this.authSessionRepository.findOneBy({ id });
   }
 
-  async update(id: number, payload: UpdateAuthSessionDto) {
+  async update(id: number, payload: UpdateAuthSessionDto, returnResults = true) {
     await this.authSessionRepository.update(id, payload);
-    return this.findOne(id);
+    if (returnResults) return this.findOne(id);
+    return null;
   }
 
   remove(id: number) {

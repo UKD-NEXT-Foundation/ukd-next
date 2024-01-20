@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { globalConfig, ConfigTypes } from '@src/configurations';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
+import { GlobalConfig, GlobalConfigType } from '@src/configurations';
+import { IGoogleProfile } from '../interfaces/google-profile.interface';
+import { AuthProvider } from '@src/users/enums/auth-provider.enum';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
-  constructor(@Inject(globalConfig.KEY) private readonly config: ConfigTypes) {
+  constructor(@Inject(GlobalConfig) private readonly config: GlobalConfigType) {
     super({
       scope: ['email', 'profile'],
       clientID: config.googleClientId,
@@ -18,14 +20,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   async validate(_accessToken: string, _refreshToken: string, profile: any, done: VerifyCallback): Promise<any> {
-    const { id, name, emails, photos } = profile;
-
-    const user = {
-      provider: 'google',
-      providerId: id,
-      email: emails[0].value,
-      name: `${name.givenName} ${name.familyName}`,
-      picture: photos[0].value,
+    const user: IGoogleProfile = {
+      provider: AuthProvider.Google,
+      providerId: profile.id,
+      email: profile.emails[0].value,
+      name: `${profile.name.givenName} ${profile.name.familyName}`,
+      picture: profile.photos[0].value,
     };
 
     done(null, user);

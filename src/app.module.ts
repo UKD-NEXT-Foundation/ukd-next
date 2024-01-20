@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '@src/users/users.module';
 import { AuthSessionsModule } from '@src/auth-sessions/auth-sessions.module';
 import { ConfigModule } from '@nestjs/config';
-import { config, globalConfig, typeormConfig } from '@src/configurations';
+import { config, GlobalConfig, typeormConfig } from '@src/configurations';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -13,7 +13,7 @@ import { config, globalConfig, typeormConfig } from '@src/configurations';
       cache: true,
     }),
     TypeOrmModule.forRootAsync({
-      inject: [globalConfig.KEY],
+      inject: [GlobalConfig],
       useFactory: typeormConfig,
     }),
     AuthModule,

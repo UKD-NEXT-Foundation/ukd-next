@@ -24,7 +24,10 @@ export class AuthSessionEntity {
   userAgent!: string;
 
   @Column()
-  expiresAt!: Date;
+  expiresIn!: Date;
+
+  @Column()
+  lastTokenUpdateAt?: Date;
 
   @CreateDateColumn()
   createdAt?: Date;

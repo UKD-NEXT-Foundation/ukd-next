@@ -1,55 +1,124 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/core/users/users.service';
+import ms from 'ms';
+import { AuthSessionsService } from '@src/auth-sessions/auth-sessions.service';
+import { GlobalConfig, GlobalConfigType } from '@src/configurations';
+import { UserEntity } from '@src/users/entities/user.entity';
+import { UsersService } from '@src/users/users.service';
+import { IJwtPayload } from './interfaces/jwt-payload.interface';
+import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
+import { IGoogleProfile } from './interfaces/google-profile.interface';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
+    @Inject(GlobalConfig)
+    private readonly config: GlobalConfigType,
+    private readonly jwtService: JwtService,
+    private readonly authSessionsService: AuthSessionsService,
     private readonly usersService: UsersService,
   ) {}
 
-  generateJwt(payload) {
-    return this.jwtService.sign(payload);
+  async signInByGoogle(profile: IGoogleProfile, userAgent: string) {
+    const user = await this.usersService.findOneByEmail(profile.email);
+
+    if (user) {
+      return this.createSession(user, userAgent);
+    }
+
+    const newUser = await this.usersService.create({
+      email: profile.email,
+      fullname: profile.name,
+      picture: profile.picture,
+      authProvider: profile.provider,
+    });
+
+    return this.createSession(newUser, userAgent);
   }
 
-  async signIn(user) {
-    if (!user) {
-      throw new BadRequestException('Unauthenticated');
-    }
-    // console.log(user)
-    const userExists = await this.findUserByEmail(user.email);
+  private async createSession(user: UserEntity, userAgent: string) {
+    const authSession = await this.authSessionsService.create({
+      expiresIn: new Date(Date.now() + ms(this.config.jwtRefreshTokenExpiresIn) * 1000),
+      refreshToken: 'The process of creating sessions continues',
+      lastTokenUpdateAt: new Date(),
+      userId: user.id,
+      userAgent,
+    });
 
-    if (!userExists) {
-      return this.registerUser(user);
-    }
+    const payload: IJwtPayload = {
+      userId: user.id,
+      email: user.email,
+      sessionId: authSession.id,
+    };
 
-    return this.generateJwt({
-      sub: userExists.id,
-      email: userExists.email,
+    const [refreshToken, accessToken] = await Promise.all([
+      this.generateRefreshToken(payload),
+      this.generateAccessToken(payload),
+    ]);
+
+    await this.authSessionsService.update(authSession.id, { refreshToken }, false);
+
+    return { refreshToken, accessToken };
+  }
+
+  async updateSession(refreshToken: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync<IJwtPayloadResponse>(refreshToken, {
+        secret: this.config.jwtRefreshTokenSecret,
+      });
+
+      delete payload.iat;
+      delete payload.exp;
+
+      const [accessToken] = await Promise.all([
+        this.generateAccessToken(payload),
+        this.authSessionsService.update(payload.sessionId, { lastTokenUpdateAt: new Date() }, false),
+      ]);
+
+      return { accessToken };
+    } catch (_error) {
+      throw new HttpException(
+        'Invalid or expired token. Please log in again to obtain a valid token',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+  }
+
+  async removeSession(refreshToken: string) {
+    try {
+      const payload = await this.jwtService.verifyAsync<IJwtPayloadResponse>(refreshToken, {
+        secret: this.config.jwtRefreshTokenSecret,
+        ignoreExpiration: true,
+      });
+
+      const { affected } = await this.authSessionsService.remove(payload.sessionId);
+
+      if (affected) {
+        return { statusCode: HttpStatus.OK, message: 'Session successfully deleted' };
+      }
+
+      throw new HttpException(
+        'Could not find a session using the given refreshToken',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    } catch (error) {
+      throw new HttpException('Invalid token. Please log in again to obtain a valid token', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  private generateAccessToken(payload: object): Promise<string> {
+    return this.jwtService.signAsync(payload, {
+      expiresIn: this.config.jwtAccessTokenExpiresIn,
+      secret: this.config.jwtAccessTokenSecret,
+      algorithm: 'HS256',
     });
   }
 
-  async registerUser(user: any) {
-    try {
-      const newUser = await this.usersService.create(user);
-
-      return this.generateJwt({
-        sub: newUser.id,
-        email: newUser.email,
-      });
-    } catch {
-      throw new InternalServerErrorException();
-    }
-  }
-
-  async findUserByEmail(email: string) {
-    const user = await this.usersService.findOneByEmail(email);
-
-    if (!user) {
-      return null;
-    }
-
-    return user;
+  private generateRefreshToken(payload: object): Promise<string> {
+    return this.jwtService.signAsync(payload, {
+      expiresIn: this.config.jwtRefreshTokenExpiresIn,
+      secret: this.config.jwtRefreshTokenSecret,
+      algorithm: 'HS512',
+    });
   }
 }

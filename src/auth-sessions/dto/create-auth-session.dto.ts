@@ -1,4 +1,4 @@
-import { IsJWT, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsJWT, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAuthSessionDto {
   @IsJWT()
@@ -9,4 +9,11 @@ export class CreateAuthSessionDto {
 
   @IsString()
   userAgent!: string;
+
+  @IsDate()
+  expiresIn!: Date;
+
+  @IsOptional()
+  @IsDate()
+  lastTokenUpdateAt?: Date;
 }

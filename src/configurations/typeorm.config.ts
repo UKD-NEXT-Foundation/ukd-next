@@ -1,7 +1,7 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { ConfigTypes } from '@src/configurations';
+import { GlobalConfigType } from '@src/configurations';
 
-export function typeormConfig(config: ConfigTypes): TypeOrmModuleOptions {
+export function typeormConfig(config: GlobalConfigType): TypeOrmModuleOptions {
   return {
     type: 'postgres',
     url: config.databaseURL,
