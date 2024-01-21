@@ -3,7 +3,7 @@ export function config() {
 
   return {
     isDevelopmentEnvironment: ENV.IS_DEVELOPMENT_ENVIRONMENT === 'true',
-    domain: 'ukd-next.dmytroframe.com',
+    domain: ENV.SERVER_DOMAIN,
     serverPort: Number(ENV.SERVER_PORT) || 8001,
     apiPrefix: ENV.API_PREFIX || '/api',
     swaggerUiPath: ENV.SWAGGER_UI_PATH || '/docs',
