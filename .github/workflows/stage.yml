@@ -40,4 +40,4 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT_STAGE }}
-          script: cd ukd-next && ./update-backend.sh
+          script: cd ukd-next--environment && ./update-container.sh ukd-next--backend
