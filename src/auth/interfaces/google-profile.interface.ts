@@ -1,9 +1,3 @@
-import { AuthProvider } from '@src/users/enums/auth-provider.enum';
+import { oauth2_v2 } from 'googleapis';
 
-export interface IGoogleProfile {
-  provider: AuthProvider;
-  providerId: number;
-  email: string;
-  name: string;
-  picture: string;
-}
+export interface IGoogleProfile extends oauth2_v2.Schema$Userinfo {}

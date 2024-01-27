@@ -1,9 +1,9 @@
-name: Build Production and deploy
+name: Build Stage and deploy
 
 on:
   push:
     branches:
-      - 'production'
+      - 'stage'
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ukd-next-backend:production
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ukd-next-backend:stage
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,5 +39,5 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT_PRODUCTION }}
+          port: ${{ secrets.SSH_PORT_STAGE }}
           script: cd ukd-next && ./update-backend.sh

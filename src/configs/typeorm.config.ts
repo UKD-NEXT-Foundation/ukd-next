@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { GlobalConfigType } from '@src/configurations';
+import { GlobalConfigType } from '@src/configs';
 
 export function typeormConfig(config: GlobalConfigType): TypeOrmModuleOptions {
   return {

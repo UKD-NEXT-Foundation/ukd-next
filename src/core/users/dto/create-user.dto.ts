@@ -18,5 +18,5 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsUrl()
-  picture?: string;
+  pictureURL?: string;
 }

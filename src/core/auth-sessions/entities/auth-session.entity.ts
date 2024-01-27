@@ -1,4 +1,4 @@
-import { UserEntity } from '@src/users/entities/user.entity';
+import { UserEntity } from '@core/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,

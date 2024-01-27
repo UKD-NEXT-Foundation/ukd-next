@@ -16,10 +16,13 @@
     "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
+    "strict": true,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
     "paths": {
+      "@common/*": ["src/common/*"],
+      "@core/*": ["src/core/*"],
       "@src/*": ["src/*"],
     },
   },

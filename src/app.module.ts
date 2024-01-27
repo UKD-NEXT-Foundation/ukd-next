@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from '@src/users/users.module';
-import { AuthSessionsModule } from '@src/auth-sessions/auth-sessions.module';
 import { ConfigModule } from '@nestjs/config';
-import { config, GlobalConfig, typeormConfig } from '@src/configurations';
+import { config, GlobalConfig, typeormConfig } from '@src/configs';
+import { CoreModule } from './core/core.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -17,8 +16,7 @@ import { config, GlobalConfig, typeormConfig } from '@src/configurations';
       useFactory: typeormConfig,
     }),
     AuthModule,
-    UsersModule,
-    AuthSessionsModule,
+    CoreModule,
   ],
 })
 export class AppModule {}

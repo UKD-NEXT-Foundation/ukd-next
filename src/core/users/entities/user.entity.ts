@@ -1,4 +1,4 @@
-import { AuthSessionEntity } from '@src/auth-sessions/entities/auth-session.entity';
+import { AuthSessionEntity } from '@core/auth-sessions/entities/auth-session.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { AuthProvider } from '../enums/auth-provider.enum';
 import { UserRole } from '../enums/user-role.enum';
@@ -12,7 +12,7 @@ export class UserEntity {
   authProvider!: AuthProvider;
 
   @Column({ type: 'enum', enum: UserRole, array: true, default: [UserRole.User] })
-  rules?: UserRole[];
+  roles?: UserRole[];
 
   @Column({ unique: true })
   email!: string;
@@ -21,7 +21,7 @@ export class UserEntity {
   fullname!: string;
 
   @Column({ default: '' })
-  picture?: string;
+  pictureURL?: string;
 
   @CreateDateColumn()
   createdAt?: Date;
