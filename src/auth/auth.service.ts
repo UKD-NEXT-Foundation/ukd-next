@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { google } from 'googleapis';
 import ms from 'ms';
 import { AuthSessionsService } from '@src/auth-sessions/auth-sessions.service';
 import { GlobalConfig, GlobalConfigType } from '@src/configurations';
@@ -8,6 +9,7 @@ import { UsersService } from '@src/users/users.service';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
+import { AuthProvider } from '@src/users/enums/auth-provider.enum';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,21 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
+  async verifyAccessToken(accessToken: string) {
+    return this.jwtService.verifyAsync<IJwtPayloadResponse>(accessToken, { secret: this.config.jwtAccessTokenSecret });
+  }
+
+  async verifyGoogleToken(accessToken: string): Promise<IGoogleProfile> {
+    const oauthClient = new google.auth.OAuth2(this.config.googleClientId, this.config.googleClientSecret);
+    const userInfoClient = google.oauth2('v2').userinfo;
+
+    oauthClient.setCredentials({ access_token: accessToken });
+
+    const { data: profile } = await userInfoClient.get({ auth: oauthClient });
+
+    return profile;
+  }
+
   async signInByGoogle(profile: IGoogleProfile, userAgent: string) {
     const user = await this.usersService.findOneByEmail(profile.email);
 
@@ -27,10 +44,10 @@ export class AuthService {
     }
 
     const newUser = await this.usersService.create({
+      fullname: `${profile.given_name} ${profile.family_name}`,
+      authProvider: AuthProvider.Google,
+      pictureURL: profile.picture,
       email: profile.email,
-      fullname: profile.name,
-      picture: profile.picture,
-      authProvider: profile.provider,
     });
 
     return this.createSession(newUser, userAgent);
@@ -39,7 +56,7 @@ export class AuthService {
   private async createSession(user: UserEntity, userAgent: string) {
     const authSession = await this.authSessionsService.create({
       expiresIn: new Date(Date.now() + ms(this.config.jwtRefreshTokenExpiresIn) * 1000),
-      refreshToken: 'The process of creating sessions continues',
+      refreshToken: 'The process of creating sessions continues...',
       lastTokenUpdateAt: new Date(),
       userId: user.id,
       userAgent,

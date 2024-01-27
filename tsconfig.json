@@ -20,6 +20,7 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
     "paths": {
+      "@common/*": ["src/common/*"],
       "@src/*": ["src/*"],
     },
   },
