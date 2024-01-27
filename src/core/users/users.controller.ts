@@ -3,7 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '@common/decorators';
+import { Roles, User } from '@common/decorators';
 import { AuthGuard, RolesGuard } from '@common/guards';
 import { UserRole } from './enums/user-role.enum';
 
@@ -23,6 +23,11 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+
+  @Get('/me')
+  findMe(@User('id') id: number) {
+    return this.usersService.findOne(id);
   }
 
   @Get(':id')

@@ -2,7 +2,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
-import { GlobalConfig, GlobalConfigType, swaggerConfig } from '@src/configurations';
+import { GlobalConfig, GlobalConfigType, swaggerConfig } from '@src/configs';
 import { AppModule } from '@src/app.module';
 
 async function bootstrap() {

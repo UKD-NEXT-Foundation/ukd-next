@@ -1,11 +1,9 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from '@src/users/users.module';
-import { AuthSessionsModule } from '@src/auth-sessions/auth-sessions.module';
 import { ConfigModule } from '@nestjs/config';
-import { config, GlobalConfig, typeormConfig } from '@src/configurations';
-import { AuthMiddleware } from '@src/auth/auth.middleware';
+import { config, GlobalConfig, typeormConfig } from '@src/configs';
+import { CoreModule } from './core/core.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,12 +16,7 @@ import { AuthMiddleware } from '@src/auth/auth.middleware';
       useFactory: typeormConfig,
     }),
     AuthModule,
-    UsersModule,
-    AuthSessionsModule,
+    CoreModule,
   ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*');
-  }
-}
+export class AppModule {}

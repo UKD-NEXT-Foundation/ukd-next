@@ -1,4 +1,4 @@
-import { AuthSessionEntity } from '@src/auth-sessions/entities/auth-session.entity';
+import { AuthSessionEntity } from '@core/auth-sessions/entities/auth-session.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { AuthProvider } from '../enums/auth-provider.enum';
 import { UserRole } from '../enums/user-role.enum';
