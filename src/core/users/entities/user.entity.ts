@@ -7,12 +7,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AuthSessionEntity } from '@core/auth-sessions/entities/auth-session.entity';
+import { AuthSessionEntity } from '@app/core/auth-sessions/entities/auth-session.entity';
 import { AuthProvider } from '../enums/auth-provider.enum';
 import { UserRole } from '../enums/user-role.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { GroupEntity } from '@core/groups/entities/group.entity';
-import { ScheduleEntity } from '@core/schedules/entities/schedule.entity';
+import { GroupEntity } from '@app/core/groups/entities/group.entity';
+import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
 
 @Entity('users')
 export class UserEntity {

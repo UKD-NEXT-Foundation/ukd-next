@@ -1,7 +1,7 @@
-import { fakeRandomUuid } from '@common/functions';
-import { GroupEntity } from '@core/groups/entities/group.entity';
-import { LessonEntity } from '@core/lessons/entities/lesson.entity';
-import { UserEntity } from '@core/users/entities/user.entity';
+import { fakeRandomUuid } from '@app/common/functions';
+import { GroupEntity } from '@app/core/groups/entities/group.entity';
+import { LessonEntity } from '@app/core/lessons/entities/lesson.entity';
+import { UserEntity } from '@app/core/users/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,

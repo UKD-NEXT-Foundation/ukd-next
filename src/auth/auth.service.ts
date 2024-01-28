@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { google } from 'googleapis';
 import ms from 'ms';
-import { AuthSessionsService } from '@core/auth-sessions/auth-sessions.service';
-import { GlobalConfig, GlobalConfigType } from '@src/configs';
-import { UserEntity } from '@core/users/entities/user.entity';
-import { UsersService } from '@core/users/users.service';
+import { AuthSessionsService } from '@app/core/auth-sessions/auth-sessions.service';
+import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
+import { UserEntity } from '@app/core/users/entities/user.entity';
+import { UsersService } from '@app/core/users/users.service';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
-import { AuthProvider } from '@common/enums';
+import { AuthProvider } from '@app/common/enums';
 
 @Injectable()
 export class AuthService {

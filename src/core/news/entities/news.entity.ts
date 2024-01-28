@@ -1,5 +1,5 @@
-import { fakeRandomUuid } from '@common/functions';
-import { UserEntity } from '@core/users/entities/user.entity';
+import { fakeRandomUuid } from '@app/common/functions';
+import { UserEntity } from '@app/core/users/entities/user.entity';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   Column,

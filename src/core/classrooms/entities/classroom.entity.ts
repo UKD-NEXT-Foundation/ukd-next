@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { ScheduleEntity } from '@core/schedules/entities/schedule.entity';
+import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
 import { IRequirements } from '../interfaces/classroom-features.interface';
 import { ApiProperty } from '@nestjs/swagger';
-import { fakeRandomUuid } from '@common/functions';
+import { fakeRandomUuid } from '@app/common/functions';
 
 @Entity('сlassroom')
 export class ClassroomEntity {

@@ -1,8 +1,8 @@
-import { fakeRandomUuid } from '@common/functions';
-import { DepartmentEntity } from '@core/departments/entities/department.entity';
-import { LessonEntity } from '@core/lessons/entities/lesson.entity';
-import { ScheduleEntity } from '@core/schedules/entities/schedule.entity';
-import { UserEntity } from '@core/users/entities/user.entity';
+import { fakeRandomUuid } from '@app/common/functions';
+import { DepartmentEntity } from '@app/core/departments/entities/department.entity';
+import { LessonEntity } from '@app/core/lessons/entities/lesson.entity';
+import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
+import { UserEntity } from '@app/core/users/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,

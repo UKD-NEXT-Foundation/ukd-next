@@ -4,8 +4,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { AuthController } from './auth.controller';
-import { UsersModule } from '@core/users/users.module';
-import { AuthSessionsModule } from '@core/auth-sessions/auth-sessions.module';
+import { UsersModule } from '@app/core/users/users.module';
+import { AuthSessionsModule } from '@app/core/auth-sessions/auth-sessions.module';
 
 @Module({
   imports: [PassportModule, JwtModule, AuthSessionsModule, UsersModule],

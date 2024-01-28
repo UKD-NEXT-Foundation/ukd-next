@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GlobalConfig, GlobalConfigType } from '@src/configs';
+import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 import ms from 'ms';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';

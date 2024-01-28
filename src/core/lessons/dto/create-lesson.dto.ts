@@ -1,5 +1,5 @@
-import { fakeRandomUuid } from '@common/functions';
-import { IRequirements } from '@core/classrooms/interfaces/classroom-features.interface';
+import { fakeRandomUuid } from '@app/common/functions';
+import { IRequirements } from '@app/core/classrooms/interfaces/classroom-features.interface';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
 

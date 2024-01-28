@@ -1,9 +1,9 @@
-import { fakeRandomUuid } from '@common/functions';
-import { IRequirements } from '@core/classrooms/interfaces/classroom-features.interface';
-import { DepartmentEntity } from '@core/departments/entities/department.entity';
-import { GroupEntity } from '@core/groups/entities/group.entity';
-import { ScheduleEntity } from '@core/schedules/entities/schedule.entity';
-import { UserEntity } from '@core/users/entities/user.entity';
+import { fakeRandomUuid } from '@app/common/functions';
+import { IRequirements } from '@app/core/classrooms/interfaces/classroom-features.interface';
+import { DepartmentEntity } from '@app/core/departments/entities/department.entity';
+import { GroupEntity } from '@app/core/groups/entities/group.entity';
+import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
+import { UserEntity } from '@app/core/users/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,

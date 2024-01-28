@@ -2,10 +2,12 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
-import { GlobalConfig, GlobalConfigType, corsConfig, swaggerConfig } from '@src/configs';
-import { AppModule } from '@src/app.module';
+import { GlobalConfig, GlobalConfigType, corsConfig, swaggerConfig } from '@app/src/configs';
+import { AppModule } from '@app/src/app.module';
+import { Timer } from '@app/common/functions/timer';
 
 async function bootstrap() {
+  const timer = new Timer().start();
   const logger = new Logger('Bootstrap');
   const app = await NestFactory.create(AppModule);
   const config: GlobalConfigType = app.get(GlobalConfig);
@@ -18,9 +20,12 @@ async function bootstrap() {
   SwaggerModule.setup(config.apiPrefix + config.swaggerUiPath, app, swaggerConfig(app));
 
   app.listen(config.serverPort, () => {
-    logger.log(`🚀 Application is running local on: http://localhost:${config.serverPort}${config.apiPrefix}`);
+    const runTime = timer.end().formattedResult();
+    const firstPartOfMessage = `🚀 Application launched in ${runTime} on`;
+
+    logger.log(`${firstPartOfMessage} local: http://localhost:${config.serverPort}${config.apiPrefix}`);
     if (!config.isDevelopmentEnvironment) {
-      logger.log(`🚀 Application is running global on: https://${config.domain}${config.apiPrefix}`);
+      logger.log(`${firstPartOfMessage} global: https://${config.domain}${config.apiPrefix}`);
     }
   });
 }

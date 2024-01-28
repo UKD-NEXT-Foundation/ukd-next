@@ -3,9 +3,9 @@ import { AuthSessionsService } from './auth-sessions.service';
 import { CreateAuthSessionDto } from './dto/create-auth-session.dto';
 import { UpdateAuthSessionDto } from './dto/update-auth-session.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuthGuard, RolesGuard } from '@common/guards';
-import { Roles } from '@common/decorators';
-import { UserRole } from '@common/enums';
+import { AuthGuard, RolesGuard } from '@app/common/guards';
+import { Roles } from '@app/common/decorators';
+import { UserRole } from '@app/common/enums';
 
 @ApiBearerAuth()
 @ApiTags('Auth Sessions')

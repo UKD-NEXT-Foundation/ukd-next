@@ -1,4 +1,4 @@
-import { fakeRandomUuid } from '@common/functions';
+import { fakeRandomUuid } from '@app/common/functions';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsUUID } from 'class-validator';
 
