@@ -1,7 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Response, NextFunction, Request } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthService } from './auth.service';
 import { UsersService } from '@app/core/users/users.service';
+import { IExpressRequest } from '@app/common/interfaces';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(
@@ -9,9 +10,11 @@ export class AuthMiddleware implements NestMiddleware {
     private readonly authService: AuthService,
   ) {}
 
-  async use(req: Request, _res: Response, next: NextFunction) {
+  async use(req: IExpressRequest, _res: Response, next: NextFunction) {
+    req.user = null;
+    req.sessionId = null;
+
     if (!req.headers.authorization) {
-      req.user = null;
       return next();
     }
 
@@ -21,9 +24,8 @@ export class AuthMiddleware implements NestMiddleware {
       const user = await this.usersService.findOne(jwtPayload.userId);
 
       req.user = user;
-    } catch (err) {
-      req.user = null;
-    }
+      req.sessionId = jwtPayload.sessionId;
+    } catch (_error) {}
 
     next();
   }

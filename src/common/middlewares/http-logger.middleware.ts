@@ -7,7 +7,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
   private logger = new Logger('HttpLoggerMiddleware');
 
   use(request: IExpressRequest, response: Response, next: NextFunction): void {
-    const { ip, method, originalUrl, body, user } = request;
+    const { ip, method, originalUrl, body, user, sessionId } = request;
     const userAgent = request.get('user-agent') || '';
 
     response.on('finish', () => {
@@ -18,6 +18,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
         originalUrl,
         statusCode,
         user: user ? { id: user.id, email: user.email } : null,
+        sessionId,
         body,
         ip,
         userAgent,
