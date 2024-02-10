@@ -7,6 +7,14 @@ export class CreateUserDto {
   authProvider!: AuthProvider;
 
   @IsOptional()
+  @IsString()
+  googleUserId?: string;
+
+  @IsOptional()
+  @IsString()
+  languageCode?: string;
+
+  @IsOptional()
   @IsEnum(UserRole, { each: true })
   rules?: UserRole[];
 

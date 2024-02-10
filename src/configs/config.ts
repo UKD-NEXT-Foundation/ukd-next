@@ -8,6 +8,7 @@ export function config() {
     apiPrefix: ENV.API_PREFIX || '/api',
     swaggerUiPath: ENV.SWAGGER_UI_PATH || '/docs',
     databaseURL: ENV.DATABASE_URL,
+    authOnlyFromDomain: ENV.AUTH_ONLY_FROM_DOMAIN || '',
     jwtAccessTokenSecret: ENV.JWT_ACCESS_TOKEN_SECRET,
     jwtRefreshTokenSecret: ENV.JWT_REFRESH_TOKEN_SECRET,
     jwtAccessTokenExpiresIn: ENV.JWT_ACCESS_TOKEN_EXPIRES_IN,

@@ -2,14 +2,14 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { google } from 'googleapis';
 import ms from 'ms';
-import { AuthSessionsService } from '@core/auth-sessions/auth-sessions.service';
-import { GlobalConfig, GlobalConfigType } from '@src/configs';
-import { UserEntity } from '@core/users/entities/user.entity';
-import { UsersService } from '@core/users/users.service';
+import { AuthSessionsService } from '@app/core/auth-sessions/auth-sessions.service';
+import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
+import { UserEntity } from '@app/core/users/entities/user.entity';
+import { UsersService } from '@app/core/users/users.service';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
-import { AuthProvider } from '@common/enums';
+import { AuthProvider } from '@app/common/enums';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,11 @@ export class AuthService {
   }
 
   async signInByGoogle(profile: IGoogleProfile, userAgent: string) {
-    const user = await this.usersService.findOneByEmail(profile.email);
+    if (this.config.authOnlyFromDomain && this.config.authOnlyFromDomain !== profile.email.split('@').pop()) {
+      throw new HttpException('An account with such a domain is not allowed', HttpStatus.CONFLICT);
+    }
+
+    const user = await this.usersService.findOne({ email: profile.email });
 
     if (user) {
       return this.createSession(user, userAgent);
@@ -46,7 +50,9 @@ export class AuthService {
     const newUser = await this.usersService.create({
       fullname: `${profile.given_name} ${profile.family_name}`,
       authProvider: AuthProvider.Google,
+      languageCode: profile.language,
       pictureURL: profile.picture,
+      googleUserId: profile.id,
       email: profile.email,
     });
 

@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { IExpressRequest } from '@common/interfaces';
-import { UserEntity } from '@core/users/entities/user.entity';
+import { IExpressRequest } from '@app/common/interfaces';
+import { UserEntity } from '@app/core/users/entities/user.entity';
 
 export const User = createParamDecorator((data: keyof UserEntity, ctx: ExecutionContext) => {
   const req: IExpressRequest = ctx.switchToHttp().getRequest();

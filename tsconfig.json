@@ -11,6 +11,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "rootDir": "./src",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
@@ -21,9 +22,9 @@
     "noFallthroughCasesInSwitch": false,
     "resolveJsonModule": true,
     "paths": {
-      "@common/*": ["src/common/*"],
-      "@core/*": ["src/core/*"],
-      "@src/*": ["src/*"],
+      "@app/common/*": ["src/common/*"],
+      "@app/core/*": ["src/core/*"],
+      "@app/src/*": ["src/*"],
     },
   },
 }
