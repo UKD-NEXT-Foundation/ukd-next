@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class NewsService {
   constructor(
     @InjectRepository(NewsEntity)
-    private readonly newsRepository: Repository<NewsEntity>
+    private readonly newsRepository: Repository<NewsEntity>,
   ) {}
 
   create(createNewsDto: CreateNewsDto) {

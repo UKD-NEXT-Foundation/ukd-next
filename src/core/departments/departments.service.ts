@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class DepartmentsService {
   constructor(
     @InjectRepository(DepartmentEntity)
-    private readonly departmentRepository: Repository<DepartmentEntity>
+    private readonly departmentRepository: Repository<DepartmentEntity>,
   ) {}
 
   create(createDepartmentDto: CreateDepartmentDto) {

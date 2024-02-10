@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class SchedulesService {
   constructor(
     @InjectRepository(ScheduleEntity)
-    private readonly scheduleRepository: Repository<ScheduleEntity>
+    private readonly scheduleRepository: Repository<ScheduleEntity>,
   ) {}
 
   create(createScheduleDto: CreateScheduleDto) {

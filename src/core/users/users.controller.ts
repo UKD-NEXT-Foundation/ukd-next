@@ -6,6 +6,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles, User } from '@app/common/decorators';
 import { AuthGuard, RolesGuard } from '@app/common/guards';
 import { UserRole } from './enums/user-role.enum';
+import { UserEntity } from './entities/user.entity';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -26,13 +27,13 @@ export class UsersController {
   }
 
   @Get('/me')
-  findMe(@User('id') id: number) {
-    return this.usersService.findOne(id);
+  findMe(@User() user: UserEntity) {
+    return user;
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+    return this.usersService.findOne({ id });
   }
 
   @Roles(UserRole.Moderator)

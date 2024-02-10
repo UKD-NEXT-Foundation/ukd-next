@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 export class GroupsService {
   constructor(
     @InjectRepository(GroupEntity)
-    private readonly groupRepository: Repository<GroupEntity>
+    private readonly groupRepository: Repository<GroupEntity>,
   ) {}
 
   create(createGroupDto: CreateGroupDto) {
