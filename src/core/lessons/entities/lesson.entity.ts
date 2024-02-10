@@ -1,4 +1,3 @@
-import { fakeRandomUuid } from '@app/common/functions';
 import { IRequirements } from '@app/core/classrooms/interfaces/classroom-features.interface';
 import { DepartmentEntity } from '@app/core/departments/entities/department.entity';
 import { GroupEntity } from '@app/core/groups/entities/group.entity';
@@ -20,9 +19,9 @@ import {
 
 @Entity('lesson')
 export class LessonEntity {
-  @ApiProperty({ example: fakeRandomUuid() })
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ApiProperty()
   @Column()
@@ -34,7 +33,7 @@ export class LessonEntity {
   teacher?: UserEntity;
 
   @Column({ select: false })
-  teacherId!: string;
+  teacherId!: number;
 
   @ApiProperty({ type: () => DepartmentEntity })
   @ManyToOne(() => DepartmentEntity, (department) => department.lessons)
@@ -42,7 +41,7 @@ export class LessonEntity {
   department?: DepartmentEntity;
 
   @Column({ select: false })
-  departmentId!: string;
+  departmentId!: number;
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })
   @ManyToMany(() => GroupEntity, (group) => group.lessons)

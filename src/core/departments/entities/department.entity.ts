@@ -1,4 +1,3 @@
-import { fakeRandomUuid } from '@app/common/functions';
 import { GroupEntity } from '@app/core/groups/entities/group.entity';
 import { LessonEntity } from '@app/core/lessons/entities/lesson.entity';
 import { UserEntity } from '@app/core/users/entities/user.entity';
@@ -16,16 +15,16 @@ import {
 
 @Entity('departments')
 export class DepartmentEntity {
-  @ApiProperty({ example: fakeRandomUuid() })
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ApiProperty()
   @Column()
   name: string;
 
   @Column({ select: false })
-  headOfDepartmentId!: string;
+  headOfDepartmentId!: number;
 
   @ApiProperty({ type: () => UserEntity })
   @OneToOne(() => UserEntity)

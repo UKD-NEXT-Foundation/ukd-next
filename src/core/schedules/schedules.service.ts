@@ -20,15 +20,15 @@ export class SchedulesService {
     return this.scheduleRepository.find();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.scheduleRepository.findOneBy({ id });
   }
 
-  update(id: string, updateScheduleDto: UpdateScheduleDto) {
+  update(id: number, updateScheduleDto: UpdateScheduleDto) {
     return this.scheduleRepository.update(id, updateScheduleDto);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.scheduleRepository.delete(id);
   }
 }

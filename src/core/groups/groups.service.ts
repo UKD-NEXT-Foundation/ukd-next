@@ -20,15 +20,15 @@ export class GroupsService {
     return this.groupRepository.find({ relations: ['students'] });
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.groupRepository.findOneBy({ id });
   }
 
-  update(id: string, updateGroupDto: UpdateGroupDto) {
+  update(id: number, updateGroupDto: UpdateGroupDto) {
     return this.groupRepository.update(id, updateGroupDto);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.groupRepository.delete(id);
   }
 }

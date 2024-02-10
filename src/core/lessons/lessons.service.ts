@@ -20,15 +20,15 @@ export class LessonsService {
     return this.lessonRepository.find();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.lessonRepository.findOneBy({ id });
   }
 
-  update(id: string, updateLessonDto: UpdateLessonDto) {
+  update(id: number, updateLessonDto: UpdateLessonDto) {
     return this.lessonRepository.update(id, updateLessonDto);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.lessonRepository.delete(id);
   }
 }

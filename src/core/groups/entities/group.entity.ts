@@ -1,4 +1,3 @@
-import { fakeRandomUuid } from '@app/common/functions';
 import { DepartmentEntity } from '@app/core/departments/entities/department.entity';
 import { LessonEntity } from '@app/core/lessons/entities/lesson.entity';
 import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
@@ -19,9 +18,9 @@ import {
 
 @Entity('groups')
 export class GroupEntity {
-  @ApiProperty({ example: fakeRandomUuid() })
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ApiProperty()
   @Column()
@@ -32,16 +31,16 @@ export class GroupEntity {
   @JoinColumn({ name: 'elderId' })
   elder?: UserEntity;
 
-  @Column('uuid')
-  elderId: string;
+  @Column()
+  elderId: number;
 
   @ApiProperty({ type: () => UserEntity })
   @OneToOne(() => UserEntity)
   @JoinColumn({ name: 'curatorId' })
   curator?: UserEntity;
 
-  @Column('uuid')
-  curatorId: string;
+  @Column()
+  curatorId: number;
 
   @ApiProperty({ type: () => UserEntity, isArray: true })
   @OneToMany(() => UserEntity, (user) => user.group)

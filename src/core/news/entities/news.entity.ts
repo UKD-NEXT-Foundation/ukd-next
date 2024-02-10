@@ -1,6 +1,5 @@
-import { fakeRandomUuid } from '@app/common/functions';
 import { UserEntity } from '@app/core/users/entities/user.entity';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -13,21 +12,13 @@ import {
 
 @Entity('news')
 export class NewsEntity {
-  @ApiProperty({ example: fakeRandomUuid })
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ApiProperty()
-  @Column()
-  title!: string;
-
-  @ApiPropertyOptional({ default: '' })
-  @Column({ type: 'text', default: '' })
-  description?: string;
-
-  @ApiPropertyOptional({ default: '' })
-  @Column({ default: '' })
-  image?: string;
+  @Column({ type: 'text' })
+  сontent!: string;
 
   @ApiProperty({ type: () => UserEntity })
   @OneToOne(() => UserEntity)
@@ -35,7 +26,7 @@ export class NewsEntity {
   author?: UserEntity;
 
   @Column({ select: false })
-  authorId!: string;
+  authorId!: number;
 
   @CreateDateColumn()
   createdAt?: Date;

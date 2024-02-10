@@ -1,4 +1,3 @@
-import { fakeRandomUuid } from '@app/common/functions';
 import { ClassroomEntity } from '@app/core/classrooms/entities/classroom.entity';
 import { GroupEntity } from '@app/core/groups/entities/group.entity';
 import { LessonEntity } from '@app/core/lessons/entities/lesson.entity';
@@ -17,9 +16,9 @@ import {
 
 @Entity('schedule')
 export class ScheduleEntity {
-  @ApiProperty({ example: fakeRandomUuid() })
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ApiProperty({ type: () => LessonEntity })
   @ManyToOne(() => LessonEntity, (lessson) => lessson.schedules)
@@ -27,7 +26,7 @@ export class ScheduleEntity {
   lessson?: LessonEntity;
 
   @Column({ select: false })
-  lesssonId!: string;
+  lesssonId!: number;
 
   @ApiProperty({ type: () => UserEntity })
   @ManyToOne(() => UserEntity, (user) => user.schedules)
@@ -35,7 +34,7 @@ export class ScheduleEntity {
   teacher?: UserEntity;
 
   @Column({ select: false })
-  teacherId!: string;
+  teacherId!: number;
 
   @ApiProperty({ type: () => ClassroomEntity })
   @ManyToOne(() => ClassroomEntity, (classroom) => classroom.schedules)
@@ -43,7 +42,7 @@ export class ScheduleEntity {
   classroom?: ClassroomEntity;
 
   @Column({ select: false })
-  classroomId!: string;
+  classroomId!: number;
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })
   @ManyToMany(() => GroupEntity, (group) => group.schedules)

@@ -20,15 +20,15 @@ export class ClassroomsService {
     return this.classroomsRepository.find();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.classroomsRepository.findOneBy({ id });
   }
 
-  update(id: string, updateClassroomDto: UpdateClassroomDto) {
+  update(id: number, updateClassroomDto: UpdateClassroomDto) {
     return this.classroomsRepository.update(id, updateClassroomDto);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.classroomsRepository.delete(id);
   }
 }

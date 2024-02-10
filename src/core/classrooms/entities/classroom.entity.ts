@@ -2,13 +2,12 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
 import { IRequirements } from '../interfaces/classroom-features.interface';
 import { ApiProperty } from '@nestjs/swagger';
-import { fakeRandomUuid } from '@app/common/functions';
 
 @Entity('сlassroom')
 export class ClassroomEntity {
-  @ApiProperty({ example: fakeRandomUuid() })
-  @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  @ApiProperty()
+  @PrimaryGeneratedColumn()
+  id?: number;
 
   @ApiProperty()
   @Column()

@@ -20,15 +20,15 @@ export class DepartmentsService {
     return this.departmentRepository.find();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.departmentRepository.findOneBy({ id });
   }
 
-  update(id: string, updateDepartmentDto: UpdateDepartmentDto) {
+  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
     return this.departmentRepository.update(id, updateDepartmentDto);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.departmentRepository.delete(id);
   }
 }

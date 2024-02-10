@@ -20,15 +20,15 @@ export class NewsService {
     return this.newsRepository.find({ relations: ['author'], order: { createdAt: 'DESC' } });
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.newsRepository.findOne({ relations: ['author'], where: { id } });
   }
 
-  update(id: string, updateNewsDto: UpdateNewsDto) {
+  update(id: number, updateNewsDto: UpdateNewsDto) {
     return this.newsRepository.update(id, updateNewsDto);
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.newsRepository.delete(id);
   }
 }

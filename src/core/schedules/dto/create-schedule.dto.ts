@@ -1,24 +1,23 @@
-import { fakeRandomUuid } from '@app/common/functions';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDate, IsOptional, IsUUID } from 'class-validator';
+import { IsDate, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateScheduleDto {
-  @ApiProperty({ example: fakeRandomUuid() })
-  @IsUUID()
-  lesssonId!: string;
+  @ApiProperty()
+  @IsNumber()
+  lesssonId!: number;
 
-  @ApiProperty({ example: fakeRandomUuid() })
-  @IsUUID()
-  teacherId!: string;
+  @ApiProperty()
+  @IsNumber()
+  teacherId!: number;
 
-  @ApiProperty({ example: fakeRandomUuid() })
-  @IsUUID()
-  classroomId!: string;
+  @ApiProperty()
+  @IsNumber()
+  classroomId!: number;
 
-  @ApiPropertyOptional({ example: fakeRandomUuid(), isArray: true })
+  @ApiPropertyOptional({ isArray: true })
   @IsOptional()
-  @IsUUID('4', { each: true })
-  groupIds?: string[];
+  @IsNumber({}, { each: true })
+  groupIds?: number[];
 
   @ApiProperty()
   @IsDate()
