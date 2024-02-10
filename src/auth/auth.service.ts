@@ -37,6 +37,10 @@ export class AuthService {
   }
 
   async signInByGoogle(profile: IGoogleProfile, userAgent: string) {
+    if (this.config.authOnlyFromDomain && this.config.authOnlyFromDomain !== profile.email.split('@').pop()) {
+      throw new HttpException('An account with such a domain is not allowed', HttpStatus.CONFLICT);
+    }
+
     const user = await this.usersService.findOne({ email: profile.email });
 
     if (user) {
@@ -46,8 +50,9 @@ export class AuthService {
     const newUser = await this.usersService.create({
       fullname: `${profile.given_name} ${profile.family_name}`,
       authProvider: AuthProvider.Google,
+      languageCode: profile.language,
       pictureURL: profile.picture,
-      googleUserId: +profile.id,
+      googleUserId: profile.id,
       email: profile.email,
     });
 

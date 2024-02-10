@@ -6,6 +6,7 @@ export function swaggerConfig(app: INestApplication) {
   const documentConfig = new DocumentBuilder()
     .setTitle('UKD NEXT API')
     .setDescription('The UKD NEXT API description')
+    .addBearerAuth()
     .setVersion(version)
     .build();
 
