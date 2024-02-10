@@ -32,6 +32,9 @@ export class UserEntity {
   @Column({ type: 'enum', enum: AuthProvider })
   authProvider!: AuthProvider;
 
+  @Column({ default: 0 })
+  googleUserId?: number;
+
   @Column({ default: '' })
   pictureURL?: string;
 

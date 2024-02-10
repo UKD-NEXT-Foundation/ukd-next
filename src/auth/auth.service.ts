@@ -37,7 +37,7 @@ export class AuthService {
   }
 
   async signInByGoogle(profile: IGoogleProfile, userAgent: string) {
-    const user = await this.usersService.findOneByEmail(profile.email);
+    const user = await this.usersService.findOne({ email: profile.email });
 
     if (user) {
       return this.createSession(user, userAgent);
@@ -47,6 +47,7 @@ export class AuthService {
       fullname: `${profile.given_name} ${profile.family_name}`,
       authProvider: AuthProvider.Google,
       pictureURL: profile.picture,
+      googleUserId: +profile.id,
       email: profile.email,
     });
 
