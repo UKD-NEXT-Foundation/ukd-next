@@ -4,7 +4,7 @@ ARG nodejs=node:20-alpine
 FROM ${nodejs} AS deps
 
 WORKDIR /app
-COPY package.json ./
+COPY package.json yarn.lock ./
 RUN yarn install 
 
 
@@ -14,6 +14,7 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 RUN yarn build
+RUN yarn install --production=true
 
 
 FROM ${nodejs} AS runner
