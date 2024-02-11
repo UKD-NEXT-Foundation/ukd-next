@@ -3,7 +3,7 @@ import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScheduleEntity } from './entities/schedule.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 
 @Injectable()
 export class SchedulesService {
@@ -16,8 +16,13 @@ export class SchedulesService {
     return this.scheduleRepository.save(createScheduleDto);
   }
 
-  findAll() {
-    return this.scheduleRepository.find();
+  async findAll(findOptions: FindOptionsWhere<ScheduleEntity>) {
+    const where: FindOptionsWhere<ScheduleEntity> = findOptions;
+
+    where.startAt = LessThanOrEqual(where.startAt);
+    where.endAt = MoreThanOrEqual(where.endAt);
+
+    return this.scheduleRepository.find({ where });
   }
 
   findOne(id: number) {

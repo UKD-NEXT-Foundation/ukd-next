@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ScheduleEntity } from './entities/schedule.entity';
+import { FindScheduleDto } from './dto/find-schedule.dto';
 
 @ApiTags('Schedules')
 @Controller('schedules')
@@ -16,10 +17,10 @@ export class SchedulesController {
     return this.schedulesService.create(createScheduleDto);
   }
 
-  @ApiOkResponse({ type: ScheduleEntity, isArray: true })
+  @ApiOkResponse({ type: ScheduleEntity })
   @Get()
-  findAll() {
-    return this.schedulesService.findAll();
+  async findAll(@Query() query: FindScheduleDto) {
+    return this.schedulesService.findAll(query);
   }
 
   @ApiOkResponse({ type: ScheduleEntity })
