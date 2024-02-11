@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 
-const URL_FOR_CREATE_CLASSROOM = 'https://ukd-next.site/api/v0/classrooms';
+const URL_FOR_CREATE_CLASSROOM = 'http://localhost:8000/api/v0/classrooms';
 const TABLE_PATH = './MigrateMocksData/classroom/Аудиторний_фонд_станом-на_13.12.2023.csv';
 
 function parseKey(key: string) {
