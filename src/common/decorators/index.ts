@@ -1,2 +1,2 @@
-export * from '@app/src/auth/decorators/roles.decorator';
-export * from '@app/src/auth/decorators/user.decorator';
+export * from '@app/core/auth/decorators/roles.decorator';
+export * from '@app/core/auth/decorators/user.decorator';
