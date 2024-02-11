@@ -17,9 +17,14 @@ export class SchedulesController {
     return this.schedulesService.create(createScheduleDto);
   }
 
-  @ApiOkResponse({ type: ScheduleEntity })
+  @ApiOkResponse({ type: ScheduleEntity, isArray: true })
   @Get()
   async findAll(@Query() query: FindScheduleDto) {
+    if (query.groupId) {
+      query['groups'] = { id: query.groupId };
+      delete query.groupId;
+    }
+
     return this.schedulesService.findAll(query);
   }
 

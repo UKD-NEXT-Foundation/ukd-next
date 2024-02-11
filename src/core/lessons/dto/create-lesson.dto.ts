@@ -7,9 +7,10 @@ export class CreateLessonDto {
   @IsString()
   name!: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
-  teacherId!: number;
+  defaultTeacherId?: number;
 
   @ApiProperty()
   @IsNumber()

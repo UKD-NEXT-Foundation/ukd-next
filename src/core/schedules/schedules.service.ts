@@ -19,10 +19,10 @@ export class SchedulesService {
   async findAll(findOptions: FindOptionsWhere<ScheduleEntity>) {
     const where: FindOptionsWhere<ScheduleEntity> = findOptions;
 
-    where.startAt = LessThanOrEqual(where.startAt);
-    where.endAt = MoreThanOrEqual(where.endAt);
+    if (where.startAt) where.startAt = LessThanOrEqual(where.startAt);
+    if (where.endAt) where.endAt = MoreThanOrEqual(where.endAt);
 
-    return this.scheduleRepository.find({ where });
+    return this.scheduleRepository.find({ where, relations: ['classroom', 'teacher', 'groups'] });
   }
 
   findOne(id: number) {

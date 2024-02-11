@@ -23,7 +23,7 @@ export class DepartmentEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ select: false })
   headOfDepartmentId!: number;
 
   @ApiProperty({ type: () => UserEntity })

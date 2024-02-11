@@ -17,7 +17,7 @@ export class DepartmentsService {
   }
 
   findAll() {
-    return this.departmentRepository.find();
+    return this.departmentRepository.find({ relations: ['headOfDepartment'] });
   }
 
   findOne(id: number) {

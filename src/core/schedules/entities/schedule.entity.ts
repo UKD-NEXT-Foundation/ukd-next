@@ -8,6 +8,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -46,6 +47,7 @@ export class ScheduleEntity {
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })
   @ManyToMany(() => GroupEntity, (group) => group.schedules)
+  @JoinTable({ name: 'schedules-to-groups' })
   groups?: GroupEntity[];
 
   @ApiProperty()
