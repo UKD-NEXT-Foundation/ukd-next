@@ -26,6 +26,9 @@ export class UserEntity {
   @Column()
   fullname!: string;
 
+  @Column({ default: null })
+  phone?: string | null;
+
   @Column({ type: 'enum', enum: UserRole, array: true, default: [UserRole.Student] })
   roles?: UserRole[];
 

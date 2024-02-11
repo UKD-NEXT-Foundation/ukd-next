@@ -4,9 +4,9 @@ import { IsString, IsNumber } from 'class-validator';
 export class CreateDepartmentDto {
   @ApiProperty()
   @IsString()
-  name: string;
+  name!: string;
 
   @ApiProperty()
   @IsNumber()
-  headOfDepartmentId: number;
+  headOfDepartmentId!: number;
 }
