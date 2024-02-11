@@ -30,4 +30,4 @@ COPY --from=builder /app/LICENSE ./LICENSE
 
 EXPOSE 8000
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
