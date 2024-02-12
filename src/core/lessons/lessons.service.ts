@@ -17,7 +17,7 @@ export class LessonsService {
   }
 
   findAll() {
-    return this.lessonRepository.find();
+    return this.lessonRepository.find({ relations: ['department'] });
   }
 
   findOne(id: number) {

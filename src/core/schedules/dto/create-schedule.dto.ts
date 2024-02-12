@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDate, IsOptional, IsNumber } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsOptional, IsNumber, IsObject } from 'class-validator';
 
 export class CreateScheduleDto {
   @ApiProperty()
@@ -16,14 +17,16 @@ export class CreateScheduleDto {
 
   @ApiPropertyOptional({ isArray: true })
   @IsOptional()
-  @IsNumber({}, { each: true })
-  groupIds?: number[];
+  @IsObject({ each: true })
+  groups?: { id: number }[];
 
   @ApiProperty()
+  @Type(() => Date)
   @IsDate()
   startAt!: Date;
 
   @ApiProperty()
+  @Type(() => Date)
   @IsDate()
   endAt!: Date;
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AuthSessionsModule } from './auth-sessions/auth-sessions.module';
 import { UsersModule } from './users/users.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
@@ -7,17 +7,24 @@ import { GroupsModule } from './groups/groups.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { NewsModule } from './news/news.module';
 import { SchedulesModule } from './schedules/schedules.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthMiddleware } from '@app/common/middlewares';
 
 @Module({
   imports: [
-    UsersModule,
+    AuthModule,
     AuthSessionsModule,
-    GroupsModule,
-    DepartmentsModule,
     ClassroomsModule,
+    DepartmentsModule,
+    GroupsModule,
     LessonsModule,
-    SchedulesModule,
     NewsModule,
+    SchedulesModule,
+    UsersModule,
   ],
 })
-export class CoreModule {}
+export class CoreModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('*');
+  }
+}

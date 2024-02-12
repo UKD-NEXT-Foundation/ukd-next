@@ -1,1 +1,1 @@
-export * from '@app/src/auth/interfaces/express-request.interface';
+export * from '@app/core/auth/interfaces/express-request.interface';

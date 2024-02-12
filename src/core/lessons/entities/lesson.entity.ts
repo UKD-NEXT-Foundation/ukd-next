@@ -2,7 +2,6 @@ import { IRequirements } from '@app/core/classrooms/interfaces/classroom-feature
 import { DepartmentEntity } from '@app/core/departments/entities/department.entity';
 import { GroupEntity } from '@app/core/groups/entities/group.entity';
 import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
-import { UserEntity } from '@app/core/users/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
@@ -12,7 +11,6 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -27,13 +25,13 @@ export class LessonEntity {
   @Column()
   name!: string;
 
-  @ApiProperty({ type: () => UserEntity })
-  @OneToOne(() => UserEntity)
-  @JoinColumn({ name: 'teacherId' })
-  teacher?: UserEntity;
+  // @ApiProperty({ type: () => UserEntity })
+  // @OneToOne(() => UserEntity)
+  // @JoinColumn({ name: 'defaultTeacherId' })
+  // defaultTeacher?: UserEntity | null;
 
-  @Column({ select: false })
-  teacherId!: number;
+  // @Column({ select: false })
+  // defaultTeacherId?: number | null;
 
   @ApiProperty({ type: () => DepartmentEntity })
   @ManyToOne(() => DepartmentEntity, (department) => department.lessons)

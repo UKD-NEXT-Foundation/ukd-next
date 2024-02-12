@@ -13,8 +13,4 @@ export class CreateGroupDto {
   @ApiProperty()
   @IsNumber()
   curatorId: number;
-
-  //   @ApiProperty({ example: fakeRandomUuid(), isArray: true })
-  //   @IsUUID('4', { each: true })
-  //   students: string[];
 }

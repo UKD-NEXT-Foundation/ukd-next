@@ -14,11 +14,11 @@ export class UsersService {
   }
 
   findAll() {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['group'] });
   }
 
   findOne(whereOptions: FindOptionsWhere<UserEntity>) {
-    return this.userRepository.findOneBy(whereOptions);
+    return this.userRepository.findOne({ where: whereOptions, relations: ['group'] });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
