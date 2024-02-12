@@ -31,11 +31,11 @@ export class FindScheduleDto {
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  startAt?: Date;
+  from?: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  endAt?: Date;
+  to?: Date;
 }
