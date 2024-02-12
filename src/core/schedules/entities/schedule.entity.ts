@@ -14,12 +14,25 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ScheduleType } from '../enums/schedule-type.enum';
 
 @Entity('schedule')
 export class ScheduleEntity {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id?: number;
+
+  @ApiProperty()
+  @Column()
+  startAt!: Date;
+
+  @ApiProperty()
+  @Column()
+  endAt!: Date;
+
+  @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture })
+  @Column({ enum: ScheduleType, default: ScheduleType.Lecture })
+  type?: ScheduleType;
 
   @ApiProperty({ type: () => LessonEntity })
   @ManyToOne(() => LessonEntity, (lessson) => lessson.schedules)
@@ -49,14 +62,6 @@ export class ScheduleEntity {
   @ManyToMany(() => GroupEntity, (group) => group.schedules)
   @JoinTable({ name: 'schedules-to-groups' })
   groups?: GroupEntity[];
-
-  @ApiProperty()
-  @Column()
-  startAt!: Date;
-
-  @ApiProperty()
-  @Column()
-  endAt!: Date;
 
   @CreateDateColumn()
   createdAt?: Date;

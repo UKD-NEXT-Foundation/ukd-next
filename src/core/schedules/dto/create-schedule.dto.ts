@@ -1,11 +1,17 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDate, IsOptional, IsNumber, IsObject } from 'class-validator';
+import { IsDate, IsOptional, IsNumber, IsObject, IsEnum } from 'class-validator';
+import { ScheduleType } from '../enums/schedule-type.enum';
 
 export class CreateScheduleDto {
   @ApiProperty()
   @IsNumber()
   lesssonId!: number;
+
+  @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture })
+  @IsOptional()
+  @IsEnum({ enum: ScheduleType, default: ScheduleType.Lecture })
+  type?: ScheduleType;
 
   @ApiProperty()
   @IsNumber()

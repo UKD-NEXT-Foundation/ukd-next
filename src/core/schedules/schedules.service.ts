@@ -3,7 +3,8 @@ import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ScheduleEntity } from './entities/schedule.entity';
-import { FindOptionsWhere, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { FindOptionsWhere, Between, Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
+import { FindScheduleDto } from './dto/find-schedule.dto';
 
 @Injectable()
 export class SchedulesService {
@@ -16,17 +17,27 @@ export class SchedulesService {
     return this.scheduleRepository.save(createScheduleDto);
   }
 
-  async findAll(findOptions: FindOptionsWhere<ScheduleEntity>) {
+  async findAll(findOptions: FindScheduleDto) {
     const where: FindOptionsWhere<ScheduleEntity> = findOptions;
 
-    if (where.startAt) where.startAt = LessThanOrEqual(where.startAt);
-    if (where.endAt) where.endAt = MoreThanOrEqual(where.endAt);
+    if (findOptions.from && findOptions.to) {
+      where.startAt = Between(findOptions.from, findOptions.to);
+    } else {
+      where.startAt = findOptions.from
+        ? MoreThanOrEqual(findOptions.from)
+        : findOptions.to
+          ? LessThanOrEqual(findOptions.to)
+          : undefined;
+    }
 
-    return this.scheduleRepository.find({ where, relations: ['classroom', 'teacher', 'groups'] });
+    delete where['from'];
+    delete where['to'];
+
+    return this.scheduleRepository.find({ where, relations: ['classroom', 'teacher', 'groups', 'lessson'] });
   }
 
   findOne(id: number) {
-    return this.scheduleRepository.findOneBy({ id });
+    return this.scheduleRepository.findOne({ where: { id }, relations: ['classroom', 'teacher', 'groups', 'lessson'] });
   }
 
   update(id: number, updateScheduleDto: UpdateScheduleDto) {
