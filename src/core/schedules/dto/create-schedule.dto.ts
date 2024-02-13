@@ -2,11 +2,12 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsOptional, IsNumber, IsObject, IsEnum } from 'class-validator';
 import { ScheduleType } from '../enums/schedule-type.enum';
+import { IsTime } from '@app/common/decorators';
 
 export class CreateScheduleDto {
   @ApiProperty()
   @IsNumber()
-  lesssonId!: number;
+  lessonId!: number;
 
   @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture })
   @IsOptional()
@@ -29,10 +30,13 @@ export class CreateScheduleDto {
   @ApiProperty()
   @Type(() => Date)
   @IsDate()
-  startAt!: Date;
+  date!: Date;
 
-  @ApiProperty()
-  @Type(() => Date)
-  @IsDate()
-  endAt!: Date;
+  @ApiProperty({ example: '10:00' })
+  @IsTime()
+  startAt!: string;
+
+  @ApiProperty({ example: '11:20' })
+  @IsTime()
+  endAt!: string;
 }

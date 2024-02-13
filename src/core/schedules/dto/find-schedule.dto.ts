@@ -19,7 +19,7 @@ export class FindScheduleDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
-  lesssonId?: number;
+  lessonId?: number;
 
   @ApiPropertyOptional()
   @IsOptional()

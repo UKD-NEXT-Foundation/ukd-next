@@ -23,24 +23,28 @@ export class ScheduleEntity {
   id?: number;
 
   @ApiProperty()
-  @Column()
-  startAt!: Date;
+  @Column({ type: 'date' })
+  date!: Date;
 
   @ApiProperty()
-  @Column()
-  endAt!: Date;
+  @Column({ type: 'time' })
+  startAt!: string;
+
+  @ApiProperty()
+  @Column({ type: 'time' })
+  endAt!: string;
 
   @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture })
   @Column({ enum: ScheduleType, default: ScheduleType.Lecture })
   type?: ScheduleType;
 
   @ApiProperty({ type: () => LessonEntity })
-  @ManyToOne(() => LessonEntity, (lessson) => lessson.schedules)
-  @JoinColumn({ name: 'lesssonId' })
-  lessson?: LessonEntity;
+  @ManyToOne(() => LessonEntity, (lesson) => lesson.schedules)
+  @JoinColumn({ name: 'lessonId' })
+  lesson?: LessonEntity;
 
   @Column({ select: false })
-  lesssonId!: number;
+  lessonId!: number;
 
   @ApiProperty({ type: () => UserEntity })
   @ManyToOne(() => UserEntity, (user) => user.schedules)

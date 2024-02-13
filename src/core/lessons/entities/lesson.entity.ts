@@ -57,6 +57,6 @@ export class LessonEntity {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @OneToMany(() => ScheduleEntity, (schedule) => schedule.lessson)
+  @OneToMany(() => ScheduleEntity, (schedule) => schedule.lesson)
   schedules?: ScheduleEntity[];
 }
