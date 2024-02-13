@@ -1,8 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsDate, IsOptional, IsNumber, IsObject, IsEnum } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsDate, IsOptional, IsNumber, IsEnum } from 'class-validator';
 import { ScheduleType } from '../enums/schedule-type.enum';
 import { IsTime } from '@app/common/decorators';
+import { formatTime } from '@app/common/functions';
 
 export class CreateScheduleDto {
   @ApiProperty()
@@ -24,8 +25,8 @@ export class CreateScheduleDto {
 
   @ApiPropertyOptional({ isArray: true })
   @IsOptional()
-  @IsObject({ each: true })
-  groups?: { id: number }[];
+  @IsNumber({}, { each: true })
+  groupIds?: number[] | { id: number }[];
 
   @ApiProperty()
   @Type(() => Date)
@@ -34,9 +35,11 @@ export class CreateScheduleDto {
 
   @ApiProperty({ example: '10:00' })
   @IsTime()
+  @Transform(({ value }) => formatTime(value))
   startAt!: string;
 
   @ApiProperty({ example: '11:20' })
   @IsTime()
+  @Transform(({ value }) => formatTime(value))
   endAt!: string;
 }
