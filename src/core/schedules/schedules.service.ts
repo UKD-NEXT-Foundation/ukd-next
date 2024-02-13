@@ -18,26 +18,52 @@ export class SchedulesService {
   }
 
   async findAll(findOptions: FindScheduleDto) {
-    const where: FindOptionsWhere<ScheduleEntity> = findOptions;
+    const where: FindOptionsWhere<ScheduleEntity> = {};
+
+    if (findOptions.teacherId) where.teacherId = findOptions.teacherId;
+    if (findOptions.classroomId) where.classroomId = findOptions.classroomId;
+    if (findOptions.lessonId) where.lessonId = findOptions.lessonId;
+    if (findOptions.groupId) where.groups = [{ id: findOptions.groupId }];
 
     if (findOptions.from && findOptions.to) {
-      where.startAt = Between(findOptions.from, findOptions.to);
-    } else {
-      where.startAt = findOptions.from
-        ? MoreThanOrEqual(findOptions.from)
-        : findOptions.to
-          ? LessThanOrEqual(findOptions.to)
-          : undefined;
+      where.date = Between(findOptions.from, findOptions.to);
+    } else if (findOptions.from) {
+      where.date = MoreThanOrEqual(findOptions.from);
+    } else if (findOptions.to) {
+      where.date = LessThanOrEqual(findOptions.to);
     }
 
-    delete where['from'];
-    delete where['to'];
-
-    return this.scheduleRepository.find({ where, relations: ['classroom', 'teacher', 'groups', 'lessson'] });
+    return this.scheduleRepository
+      .createQueryBuilder('schedule')
+      .leftJoinAndSelect('schedule.classroom', 'classroom')
+      .leftJoinAndSelect('schedule.teacher', 'teacher')
+      .leftJoinAndSelect('schedule.groups', 'groups')
+      .leftJoinAndSelect('schedule.lesson', 'lesson')
+      .select([
+        'schedule.id',
+        'schedule.date',
+        'schedule.startAt',
+        'schedule.endAt',
+        'schedule.type',
+        'schedule.createdAt',
+        'schedule.updatedAt',
+        'lesson.id',
+        'lesson.name',
+        'teacher.id',
+        'teacher.fullname',
+        'teacher.email',
+        'classroom.id',
+        'classroom.name',
+        'groups.id',
+        'groups.name',
+      ])
+      .orderBy('schedule.date', 'DESC')
+      .where(where)
+      .getMany();
   }
 
   findOne(id: number) {
-    return this.scheduleRepository.findOne({ where: { id }, relations: ['classroom', 'teacher', 'groups', 'lessson'] });
+    return this.scheduleRepository.findOne({ where: { id }, relations: ['classroom', 'teacher', 'groups', 'lesson'] });
   }
 
   update(id: number, updateScheduleDto: UpdateScheduleDto) {
