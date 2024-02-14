@@ -13,8 +13,8 @@ export class SchedulesService {
     private readonly scheduleRepository: Repository<ScheduleEntity>,
   ) {}
 
-  create(createScheduleDto: CreateScheduleDto) {
-    return this.scheduleRepository.save(createScheduleDto);
+  create(payload: CreateScheduleDto) {
+    return this.scheduleRepository.save(payload);
   }
 
   async findAll(findOptions: FindScheduleDto) {
@@ -57,7 +57,8 @@ export class SchedulesService {
         'groups.id',
         'groups.name',
       ])
-      .orderBy('schedule.date', 'DESC')
+      .orderBy('schedule.date', 'ASC')
+      .addOrderBy('schedule.startAt', 'ASC')
       .where(where)
       .getMany();
   }

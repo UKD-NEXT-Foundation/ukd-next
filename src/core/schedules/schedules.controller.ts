@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
+  Query,
+  ConflictException,
+} from '@nestjs/common';
 import { SchedulesService } from './schedules.service';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -13,8 +24,14 @@ export class SchedulesController {
 
   @ApiCreatedResponse({ type: ScheduleEntity })
   @Post()
-  create(@Body() createScheduleDto: CreateScheduleDto) {
-    return this.schedulesService.create(createScheduleDto);
+  create(@Body() payload: CreateScheduleDto) {
+    payload.groupIds = payload.groupIds?.map((id) => ({ id }));
+
+    if (new Date(`1970-01-01T${payload.startAt}`) > new Date(`1970-01-01T${payload.endAt}`)) {
+      throw new ConflictException('endAt must not be less than startAt');
+    }
+
+    return this.schedulesService.create(payload);
   }
 
   @ApiOkResponse({ type: ScheduleEntity, isArray: true })
