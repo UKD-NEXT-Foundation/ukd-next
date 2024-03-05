@@ -9,6 +9,7 @@ import { NewsModule } from './news/news.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware } from '@app/common/middlewares';
+import { JournalsModule } from './journals/journals.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AuthMiddleware } from '@app/common/middlewares';
     NewsModule,
     SchedulesModule,
     UsersModule,
+    JournalsModule,
   ],
 })
 export class CoreModule {
