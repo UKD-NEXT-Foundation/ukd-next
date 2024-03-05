@@ -1,6 +1,7 @@
 import { IRequirements } from '@app/core/classrooms/interfaces/classroom-features.interface';
 import { DepartmentEntity } from '@app/core/departments/entities/department.entity';
 import { GroupEntity } from '@app/core/groups/entities/group.entity';
+import { JournalEntity } from '@app/core/journals/entities/journal.entity';
 import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import {
@@ -59,4 +60,7 @@ export class LessonEntity {
 
   @OneToMany(() => ScheduleEntity, (schedule) => schedule.lesson)
   schedules?: ScheduleEntity[];
+
+  @OneToMany(() => JournalEntity, (journal) => journal.lesson)
+  journals?: JournalEntity[];
 }
