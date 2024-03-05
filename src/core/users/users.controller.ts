@@ -29,9 +29,33 @@ export class UsersController {
   }
 
   @ApiOkResponse({ type: UserEntity })
-  @Get('/me')
+  @Get('/profile')
   findMe(@User() user: UserEntity) {
-    return user;
+    return {
+      ...user,
+      group: user.group
+        ? {
+            id: user.group.id,
+            name: user.group.name,
+            elder: user.group.elder
+              ? {
+                  id: user.group.elder.id,
+                  email: user.group.elder.email,
+                  fullname: user.group.elder.fullname,
+                  phone: user.group.elder.phone,
+                }
+              : null,
+            curator: user.group.curator
+              ? {
+                  id: user.group.curator.id,
+                  email: user.group.curator.email,
+                  fullname: user.group.curator.fullname,
+                  phone: user.group.curator.phone,
+                }
+              : null,
+          }
+        : null,
+    };
   }
 
   @ApiOkResponse({ type: UserEntity })
