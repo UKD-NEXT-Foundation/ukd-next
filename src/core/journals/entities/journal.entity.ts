@@ -17,7 +17,7 @@ export class JournalEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @ManyToOne(() => LessonEntity, (lesson) => lesson.schedules)
+  @ManyToOne(() => LessonEntity, (lesson) => lesson.journals)
   @JoinColumn({ name: 'lessonId' })
   lesson?: LessonEntity;
 
@@ -25,23 +25,38 @@ export class JournalEntity {
   lessonId!: number;
 
   @ApiProperty({ type: () => UserEntity })
-  @ManyToOne(() => UserEntity, (user) => user.schedules, {})
+  @ManyToOne(() => UserEntity, (user) => user.journalsByTeacher)
   @JoinColumn({ name: 'teacherId' })
   teacher?: UserEntity;
 
   @Column({ select: false })
   teacherId!: number;
 
+  @ApiProperty({ type: () => UserEntity })
+  @ManyToOne(() => UserEntity, (user) => user.journalsByStudent)
+  @JoinColumn({ name: 'studentId' })
+  student?: UserEntity;
+
+  @Column({ select: false })
+  studentId!: number;
+
+  @ApiProperty()
+  @Column({ type: 'date' })
+  date!: Date;
+
   @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture })
   @Column({ enum: ScheduleType, default: ScheduleType.Lecture })
   type?: ScheduleType;
 
-  @Column({ type: 'numeric', precision: 5, scale: 2, default: 0.0 })
-  mark!: number;
+  @ApiProperty()
+  @Column({ type: 'varchar', length: 3 })
+  mark!: string;
 
+  @ApiProperty()
   @CreateDateColumn()
   createdAt?: Date;
 
+  @ApiProperty()
   @UpdateDateColumn()
   updatedAt?: Date;
 }

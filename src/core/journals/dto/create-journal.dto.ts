@@ -1,7 +1,7 @@
 import { ScheduleType } from '@app/common/enums';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsDate, IsEnum, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateJournalDto {
   @ApiProperty()
@@ -12,9 +12,13 @@ export class CreateJournalDto {
   @IsNumber()
   teacherId!: number;
 
+  @ApiProperty()
+  @IsNumber()
+  studentId!: number;
+
   @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture })
   @IsOptional()
-  @IsEnum({ enum: ScheduleType, default: ScheduleType.Lecture })
+  @IsEnum(ScheduleType)
   type?: ScheduleType;
 
   @ApiProperty()
@@ -22,7 +26,10 @@ export class CreateJournalDto {
   @IsDate()
   date!: Date;
 
-  @ApiProperty()
-  @IsNumber({ maxDecimalPlaces: 2, allowNaN: false, allowInfinity: false })
-  mark!: number;
+  @ApiProperty({ example: '4' })
+  @IsString()
+  @Transform(({ value }) => value.trim().toUpperCase())
+  @MinLength(1)
+  @MaxLength(3)
+  mark!: string;
 }

@@ -12,7 +12,7 @@ export class CreateScheduleDto {
 
   @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture })
   @IsOptional()
-  @IsEnum({ enum: ScheduleType, default: ScheduleType.Lecture })
+  @IsEnum(ScheduleType)
   type?: ScheduleType;
 
   @ApiProperty()

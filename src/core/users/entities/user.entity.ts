@@ -13,6 +13,7 @@ import { UserRole } from '../enums/user-role.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { GroupEntity } from '@app/core/groups/entities/group.entity';
 import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
+import { JournalEntity } from '@app/core/journals/entities/journal.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -69,4 +70,10 @@ export class UserEntity {
 
   @OneToMany(() => ScheduleEntity, (schedule) => schedule.teacher)
   schedules?: ScheduleEntity[];
+
+  @OneToMany(() => JournalEntity, (journal) => journal.teacher)
+  journalsByTeacher?: JournalEntity[];
+
+  @OneToMany(() => JournalEntity, (journal) => journal.student)
+  journalsByStudent?: JournalEntity[];
 }
