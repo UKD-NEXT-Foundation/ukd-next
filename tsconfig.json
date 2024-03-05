@@ -22,8 +22,9 @@
     "resolveJsonModule": true,
     "paths": {
       "@app/common/*": ["src/common/*"],
+      "@app/providers/*": ["src/providers/*"],
       "@app/core/*": ["src/core/*"],
-      "@app/src/*": ["src/*"],
-    },
-  },
+      "@app/src/*": ["src/*"]
+    }
+  }
 }
