@@ -19,7 +19,6 @@
     "strict": true,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true,
     "paths": {
       "@app/common/*": ["src/common/*"],
       "@app/providers/*": ["src/providers/*"],

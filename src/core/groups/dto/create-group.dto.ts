@@ -8,9 +8,9 @@ export class CreateGroupDto {
 
   @ApiProperty()
   @IsNumber()
-  elderId: number;
+  elderId?: number;
 
   @ApiProperty()
   @IsNumber()
-  curatorId: number;
+  curatorId?: number;
 }

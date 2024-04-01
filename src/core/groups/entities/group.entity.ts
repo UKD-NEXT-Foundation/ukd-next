@@ -27,20 +27,20 @@ export class GroupEntity {
   name: string;
 
   @ApiProperty({ type: () => UserEntity })
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'elderId' })
-  elder?: UserEntity;
+  elder?: UserEntity | null;
 
-  @Column()
-  elderId: number;
+  @Column({ nullable: true })
+  elderId: number | null;
 
   @ApiProperty({ type: () => UserEntity })
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'curatorId' })
-  curator?: UserEntity;
+  curator?: UserEntity | null;
 
-  @Column()
-  curatorId: number;
+  @Column({ nullable: true })
+  curatorId: number | null;
 
   @ApiProperty({ type: () => UserEntity, isArray: true })
   @OneToMany(() => UserEntity, (user) => user.group)

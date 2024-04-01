@@ -2,13 +2,20 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
-import { GlobalConfig, GlobalConfigType, corsConfig, swaggerConfig } from '@app/src/configs';
 import { AppModule } from '@app/src/app.module';
 import { Timer } from '@app/common/functions/timer';
+import {
+  GlobalConfig,
+  GlobalConfigType,
+  corsConfig,
+  createOpenApiDocument,
+  swaggerCustomOptions,
+} from '@app/src/configs';
 
 async function bootstrap() {
   const timer = new Timer().start();
   const logger = new Logger('Bootstrap');
+
   const app = await NestFactory.create(AppModule);
   const config: GlobalConfigType = app.get(GlobalConfig);
 
@@ -17,7 +24,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors(corsConfig);
 
-  SwaggerModule.setup(config.apiPrefix + config.swaggerUiPath, app, swaggerConfig(app));
+  SwaggerModule.setup(config.apiPrefix + config.swaggerUiPath, app, createOpenApiDocument(app), swaggerCustomOptions);
 
   app.listen(config.serverPort, () => {
     const runTime = timer.end().formattedResult();
