@@ -1,14 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { version } from 'package.json';
 
-export function swaggerConfig(app: INestApplication) {
-  const documentConfig = new DocumentBuilder()
+export function createOpenApiDocument(app: INestApplication) {
+  const document = new DocumentBuilder()
     .setTitle('UKD NEXT API')
     .setDescription('The UKD NEXT API description')
+    .setVersion('0.0.1')
     .addBearerAuth()
-    .setVersion(version)
     .build();
 
-  return SwaggerModule.createDocument(app, documentConfig);
+  return SwaggerModule.createDocument(app, document);
 }

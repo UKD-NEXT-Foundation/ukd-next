@@ -12,8 +12,8 @@ export class GroupsService {
     private readonly groupRepository: Repository<GroupEntity>,
   ) {}
 
-  create(createGroupDto: CreateGroupDto) {
-    return this.groupRepository.save(createGroupDto);
+  create(payload: CreateGroupDto | CreateGroupDto[]) {
+    return this.groupRepository.save(Array.isArray(payload) ? payload : [payload]);
   }
 
   findAll() {

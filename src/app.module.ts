@@ -5,6 +5,7 @@ import { config, GlobalConfig, typeormConfig } from '@app/src/configs';
 import { TypeOrmFilterProvider } from '@app/common/exception-filters';
 import { HttpLoggerMiddleware } from '@app/common/middlewares';
 import { CoreModule } from '@app/core/core.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CoreModule } from '@app/core/core.module';
       inject: [GlobalConfig],
       useFactory: typeormConfig,
     }),
+    ScheduleModule.forRoot(),
     CoreModule,
   ],
   providers: [TypeOrmFilterProvider],
