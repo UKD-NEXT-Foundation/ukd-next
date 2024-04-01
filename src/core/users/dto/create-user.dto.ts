@@ -1,4 +1,14 @@
-import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString, IsUrl, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsUrl,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { AuthProvider } from '../enums/auth-provider.enum';
 import { UserRole } from '../enums/user-role.enum';
 import { Transform } from 'class-transformer';
@@ -42,4 +52,9 @@ export class CreateUserDto {
   @IsOptional()
   @IsUrl()
   pictureURL?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber({})
+  groupId?: number;
 }
