@@ -13,8 +13,8 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  findAll() {
-    return this.userRepository.find({ relations: ['group'] });
+  findAll(whereOptions?: FindOptionsWhere<UserEntity>) {
+    return this.userRepository.find({ where: whereOptions, relations: ['group'] });
   }
 
   findOne(whereOptions: FindOptionsWhere<UserEntity>) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseIntPipe, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -7,6 +7,7 @@ import { Roles, User } from '@app/common/decorators';
 import { AuthGuard, RolesGuard } from '@app/common/guards';
 import { UserRole } from './enums/user-role.enum';
 import { UserEntity } from './entities/user.entity';
+import { FindAllUsersDto } from './dto/find-all-users.dto';
 
 @ApiBearerAuth()
 @ApiTags('Users')
@@ -16,16 +17,17 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiCreatedResponse({ type: UserEntity })
-  @Roles(UserRole.Moderator)
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Post()
   create(@Body() payload: CreateUserDto) {
     return this.usersService.create(payload);
   }
 
   @ApiOkResponse({ type: UserEntity, isArray: true })
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: FindAllUsersDto) {
+    return this.usersService.findAll(query);
   }
 
   @ApiOkResponse({ type: UserEntity })
@@ -65,13 +67,13 @@ export class UsersController {
   }
 
   @ApiBody({ type: UpdateUserDto })
-  @Roles(UserRole.Moderator)
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateUserDto) {
     return this.usersService.update(id, payload);
   }
 
-  @Roles(UserRole.Moderator)
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.usersService.remove(id);
