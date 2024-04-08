@@ -8,7 +8,7 @@ import { LessonsModule } from './lessons/lessons.module';
 import { NewsModule } from './news/news.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthMiddleware } from '@app/common/middlewares';
+import { AuthMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
 import { JournalsModule } from './journals/journals.module';
 
 @Module({
@@ -28,5 +28,6 @@ import { JournalsModule } from './journals/journals.module';
 export class CoreModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AuthMiddleware).forRoutes('*');
+    consumer.apply(HttpLoggerMiddleware).forRoutes('*');
   }
 }

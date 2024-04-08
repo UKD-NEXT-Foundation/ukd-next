@@ -17,7 +17,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
         method,
         originalUrl,
         statusCode,
-        user: user ? { id: user.id, email: user.email } : null,
+        user: user ? { id: user.id, email: user.email, roles: user.roles } : null,
         sessionId,
         body,
         ip,

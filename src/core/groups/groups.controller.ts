@@ -10,10 +10,10 @@ import { GroupEntity } from './entities/group.entity';
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 
-  @ApiCreatedResponse({ type: GroupEntity })
+  @ApiCreatedResponse({ type: GroupEntity, isArray: true })
   @Post()
-  create(@Body() createGroupDto: CreateGroupDto) {
-    return this.groupsService.create(createGroupDto);
+  create(@Body() payload: CreateGroupDto[]) {
+    return this.groupsService.create(payload);
   }
 
   @ApiOkResponse({ type: GroupEntity, isArray: true })
@@ -29,8 +29,8 @@ export class GroupsController {
   }
 
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateGroupDto: UpdateGroupDto) {
-    return this.groupsService.update(id, updateGroupDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateGroupDto) {
+    return this.groupsService.update(id, payload);
   }
 
   @Delete(':id')

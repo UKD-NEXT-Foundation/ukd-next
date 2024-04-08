@@ -24,7 +24,7 @@ export class CreateUserDto {
   @ApiPropertyOptional({ enum: UserRole, isArray: true, default: [UserRole.Student] })
   @IsOptional()
   @IsEnum(UserRole, { each: true })
-  rules?: UserRole[];
+  roles?: UserRole[];
 
   @ApiPropertyOptional()
   @IsOptional()
