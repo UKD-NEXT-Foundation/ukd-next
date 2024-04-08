@@ -3,7 +3,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Repository, In } from 'typeorm';
+import { FindAllUsersDto } from './dto/find-all-users.dto';
+import { UserRole } from './enums/user-role.enum';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +15,14 @@ export class UsersService {
     return this.userRepository.save(createUserDto);
   }
 
-  findAll(whereOptions?: FindOptionsWhere<UserEntity>) {
+  findAll(findOptions?: FindAllUsersDto) {
+    const whereOptions: FindOptionsWhere<UserEntity> = findOptions;
+
+    if (findOptions.role) {
+      whereOptions.roles = [findOptions.role] as any;
+      delete whereOptions['role'];
+    }
+
     return this.userRepository.find({ where: whereOptions, relations: ['group'] });
   }
 

@@ -26,10 +26,10 @@ export class FindAllUsersDto {
   @IsEnum(AuthProvider)
   authProvider?: AuthProvider;
 
-  @ApiPropertyOptional({ enum: UserRole, isArray: true, default: [UserRole.Student] })
+  @ApiPropertyOptional({ enum: UserRole })
   @IsOptional()
-  @IsEnum(UserRole, { each: true })
-  rules?: UserRole[];
+  @IsEnum(UserRole)
+  role?: UserRole;
 
   @ApiPropertyOptional()
   @IsOptional()

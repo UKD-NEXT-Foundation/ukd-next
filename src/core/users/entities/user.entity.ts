@@ -35,7 +35,7 @@ export class UserEntity {
 
   @ApiProperty({ enum: UserRole, isArray: true, default: [UserRole.Student] })
   @Column({ type: 'enum', enum: UserRole, array: true, default: [UserRole.Student] })
-  roles?: UserRole[];
+  roles: UserRole[];
 
   @ApiProperty({ type: 'enum', enum: AuthProvider })
   @Column({ type: 'enum', enum: AuthProvider })
