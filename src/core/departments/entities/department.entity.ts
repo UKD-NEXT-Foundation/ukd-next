@@ -24,7 +24,7 @@ export class DepartmentEntity {
   name: string;
 
   @Column({ select: false })
-  headOfDepartmentId!: number;
+  headOfDepartmentId?: number;
 
   @ApiProperty({ type: () => UserEntity })
   @OneToOne(() => UserEntity)
