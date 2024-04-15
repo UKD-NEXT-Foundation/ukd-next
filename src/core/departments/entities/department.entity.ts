@@ -20,16 +20,16 @@ export class DepartmentEntity {
   id?: number;
 
   @ApiProperty()
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column({ select: false })
-  headOfDepartmentId?: number;
+  @Column({ select: false, nullable: true })
+  headOfDepartmentId?: number | null;
 
   @ApiProperty({ type: () => UserEntity })
-  @OneToOne(() => UserEntity)
+  @OneToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'headOfDepartmentId' })
-  headOfDepartment?: UserEntity;
+  headOfDepartment?: UserEntity | null;
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })
   @OneToMany(() => GroupEntity, (group) => group.department)

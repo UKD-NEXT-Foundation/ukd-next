@@ -32,7 +32,7 @@ export class GroupEntity {
   elder?: UserEntity | null;
 
   @Column({ nullable: true })
-  elderId: number | null;
+  elderId?: number | null;
 
   @ApiProperty({ type: () => UserEntity })
   @OneToOne(() => UserEntity, { nullable: true })
@@ -40,11 +40,15 @@ export class GroupEntity {
   curator?: UserEntity | null;
 
   @Column({ nullable: true })
-  curatorId: number | null;
+  curatorId?: number | null;
 
   @ApiProperty({ type: () => UserEntity, isArray: true })
   @OneToMany(() => UserEntity, (user) => user.group)
   students: UserEntity[];
+
+  @ApiProperty({ default: null })
+  @Column({ nullable: true, default: null })
+  googleSheetsURL: string | null;
 
   @ApiProperty()
   @CreateDateColumn()

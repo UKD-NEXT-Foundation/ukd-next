@@ -28,15 +28,15 @@ export class ScheduleEntity {
 
   @ApiProperty()
   @Column({ type: 'time' })
-  startAt!: string;
+  startAt!: string; 
 
   @ApiProperty()
   @Column({ type: 'time' })
   endAt!: string;
 
   @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture })
-  @Column({ enum: ScheduleType, default: ScheduleType.Lecture })
-  type?: ScheduleType;
+  @Column({ enum: ScheduleType, default: ScheduleType.Lecture, nullable: true })
+  type?: ScheduleType | null;
 
   @ApiProperty({ type: () => LessonEntity })
   @ManyToOne(() => LessonEntity, (lesson) => lesson.schedules)
@@ -47,20 +47,20 @@ export class ScheduleEntity {
   lessonId!: number;
 
   @ApiProperty({ type: () => UserEntity })
-  @ManyToOne(() => UserEntity, (user) => user.schedules)
+  @ManyToOne(() => UserEntity, (user) => user.schedules, { nullable: true })
   @JoinColumn({ name: 'teacherId' })
-  teacher?: UserEntity;
+  teacher?: UserEntity | null;
 
-  @Column({ select: false })
-  teacherId!: number;
+  @Column({ select: false,  nullable: true })
+  teacherId?: number | null;
 
   @ApiProperty({ type: () => ClassroomEntity })
-  @ManyToOne(() => ClassroomEntity, (classroom) => classroom.schedules)
+  @ManyToOne(() => ClassroomEntity, (classroom) => classroom.schedules, { nullable: true })
   @JoinColumn({ name: 'classroomId' })
-  classroom?: ClassroomEntity;
+  classroom?: ClassroomEntity | null;
 
-  @Column({ select: false })
-  classroomId!: number;
+  @Column({ select: false,  nullable: true })
+  classroomId?: number | null;
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })
   @ManyToMany(() => GroupEntity, (group) => group.schedules)

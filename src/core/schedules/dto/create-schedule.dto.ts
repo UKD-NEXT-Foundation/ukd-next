@@ -15,13 +15,15 @@ export class CreateScheduleDto {
   @IsEnum(ScheduleType)
   type?: ScheduleType;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
-  teacherId!: number;
+  teacherId!: number  | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
-  classroomId!: number;
+  classroomId!: number  | null;
 
   @ApiPropertyOptional({ isArray: true })
   @IsOptional()
