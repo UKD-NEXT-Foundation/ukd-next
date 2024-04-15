@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
 import { IRequirements } from '../interfaces/classroom-features.interface';
 
 export class CreateClassroomDto {
@@ -16,6 +16,11 @@ export class CreateClassroomDto {
   @IsOptional()
   @IsBoolean()
   isOnline?: boolean;
+
+  @ApiPropertyOptional({ default: null })
+  @IsOptional()
+  @IsUrl()
+  onlineLink?: string | null;
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()

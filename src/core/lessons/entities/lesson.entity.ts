@@ -23,7 +23,7 @@ export class LessonEntity {
   id?: number;
 
   @ApiProperty()
-  @Column()
+  @Column({ unique: true })
   name!: string;
 
   // @ApiProperty({ type: () => UserEntity })
@@ -35,12 +35,12 @@ export class LessonEntity {
   // defaultTeacherId?: number | null;
 
   @ApiProperty({ type: () => DepartmentEntity })
-  @ManyToOne(() => DepartmentEntity, (department) => department.lessons)
+  @ManyToOne(() => DepartmentEntity, (department) => department.lessons, { nullable: true })
   @JoinColumn({ name: 'departmentId' })
-  department?: DepartmentEntity;
+  department?: DepartmentEntity | null;
 
-  @Column({ select: false })
-  departmentId!: number;
+  @Column({ select: false, nullable: true })
+  departmentId?: number | null;
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })
   @ManyToMany(() => GroupEntity, (group) => group.lessons)

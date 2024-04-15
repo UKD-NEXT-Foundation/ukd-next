@@ -15,4 +15,9 @@ export class CreateGroupDto {
   @IsOptional()
   @IsNumber()
   curatorId?: number | null;
+  
+  @ApiPropertyOptional({ default: null })
+  @IsOptional()
+  @IsString()
+  googleSheetsURL?: string | null;
 }

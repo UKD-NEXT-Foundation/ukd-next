@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ScheduleEntity } from '@app/core/schedules/entities/schedule.entity';
 import { IRequirements } from '../interfaces/classroom-features.interface';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @Entity('сlassroom')
 export class ClassroomEntity {
@@ -20,6 +20,10 @@ export class ClassroomEntity {
   @ApiProperty()
   @Column({ default: false })
   isOnline?: boolean;
+
+  @ApiPropertyOptional({ default: null })
+  @Column({ nullable: true, default: null })
+  onlineLink?: string | null;
 
   @ApiProperty()
   @Column({ default: true })

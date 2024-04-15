@@ -12,9 +12,10 @@ export class CreateLessonDto {
   @IsNumber()
   defaultTeacherId?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
-  departmentId!: number;
+  departmentId?: number | null;
 
   @ApiPropertyOptional()
   @IsOptional()
