@@ -18,17 +18,19 @@ export class CreateScheduleDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  teacherId!: number  | null;
+  teacherId!: number | null;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  classroomId!: number  | null;
+  classroomId!: number | null;
 
   @ApiPropertyOptional({ isArray: true })
   @IsOptional()
   @IsNumber({}, { each: true })
-  groupIds?: number[] | { id: number }[];
+  groupIds?: number[];
+
+  groups?: { id: number }[];
 
   @ApiProperty()
   @Type(() => Date)

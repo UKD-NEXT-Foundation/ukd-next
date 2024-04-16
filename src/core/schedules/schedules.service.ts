@@ -13,7 +13,7 @@ export class SchedulesService {
     private readonly scheduleRepository: Repository<ScheduleEntity>,
   ) {}
 
-  create(payload: CreateScheduleDto) {
+  create(payload: CreateScheduleDto[]) {
     return this.scheduleRepository.save(payload);
   }
 
@@ -23,7 +23,6 @@ export class SchedulesService {
     if (findOptions.teacherId) where.teacherId = findOptions.teacherId;
     if (findOptions.classroomId) where.classroomId = findOptions.classroomId;
     if (findOptions.lessonId) where.lessonId = findOptions.lessonId;
-    if (findOptions.groupId) where.groups = [{ id: findOptions.groupId }];
 
     if (findOptions.from && findOptions.to) {
       where.date = Between(findOptions.from, findOptions.to);
@@ -33,7 +32,7 @@ export class SchedulesService {
       where.date = LessThanOrEqual(findOptions.to);
     }
 
-    return this.scheduleRepository
+    const builder = this.scheduleRepository
       .createQueryBuilder('schedule')
       .leftJoinAndSelect('schedule.classroom', 'classroom')
       .leftJoinAndSelect('schedule.teacher', 'teacher')
@@ -59,8 +58,13 @@ export class SchedulesService {
       ])
       .orderBy('schedule.date', 'ASC')
       .addOrderBy('schedule.startAt', 'ASC')
-      .where(where)
-      .getMany();
+      .where(where);
+
+    if (findOptions?.groupId) {
+      builder.andWhere('groups.id = :groupId', findOptions);
+    }
+
+    return builder.getMany();
   }
 
   findOne(id: number) {

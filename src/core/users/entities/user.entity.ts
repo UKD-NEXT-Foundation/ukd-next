@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -66,7 +67,11 @@ export class UserEntity {
 
   @ApiProperty({ type: GroupEntity, nullable: true })
   @ManyToOne(() => GroupEntity, (group) => group.students)
+  @JoinColumn({ name: 'groupId' })
   group?: GroupEntity | null;
+
+  @Column({ select: false,  nullable: true })
+  groupId?: number | null;
 
   @OneToMany(() => ScheduleEntity, (schedule) => schedule.teacher)
   schedules?: ScheduleEntity[];
