@@ -16,15 +16,16 @@ export class CreateJournalDto {
   @IsNumber()
   studentId!: number;
 
-  @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture })
+  @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture, nullable: true })
   @IsOptional()
   @IsEnum(ScheduleType)
-  type?: ScheduleType;
+  type?: ScheduleType | null;
 
-  @ApiProperty()
+  @ApiPropertyOptional({ nullable: true })
+  @IsOptional()
   @Type(() => Date)
   @IsDate()
-  date!: Date;
+  date?: Date | null;
 
   @ApiProperty({ example: '4' })
   @IsString()
