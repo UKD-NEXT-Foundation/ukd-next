@@ -12,7 +12,7 @@ export class DepartmentsService {
     private readonly departmentRepository: Repository<DepartmentEntity>,
   ) {}
 
-  create(createDepartmentDto: CreateDepartmentDto) {
+  create(createDepartmentDto: CreateDepartmentDto[]) {
     return this.departmentRepository.save(createDepartmentDto);
   }
 

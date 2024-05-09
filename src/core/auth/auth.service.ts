@@ -44,22 +44,24 @@ export class AuthService {
     const user = await this.usersService.findOne({ email: profile.email });
 
     if (user) {
-      return this.createSession(user, userAgent);
+      return this.createSession(user, userAgent, profile);
     }
 
-    const newUser = await this.usersService.create({
-      fullname: `${profile.given_name} ${profile.family_name}`,
-      authProvider: AuthProvider.Google,
-      languageCode: profile.language,
-      pictureURL: profile.picture,
-      googleUserId: profile.id,
-      email: profile.email,
-    });
+    const newUser = await this.usersService.create([
+      {
+        fullname: `${profile.given_name} ${profile.family_name}`,
+        authProvider: AuthProvider.Google,
+        languageCode: profile.language,
+        pictureURL: profile.picture,
+        googleUserId: profile.id,
+        email: profile.email,
+      },
+    ]);
 
-    return this.createSession(newUser, userAgent);
+    return this.createSession(newUser[0], userAgent);
   }
 
-  private async createSession(user: UserEntity, userAgent: string) {
+  private async createSession(user: UserEntity, userAgent: string, profile?: IGoogleProfile) {
     const authSession = await this.authSessionsService.create({
       expiresIn: new Date(Date.now() + ms(this.config.jwtRefreshTokenExpiresIn) * 1000),
       refreshToken: 'The process of creating sessions continues...',
@@ -77,6 +79,13 @@ export class AuthService {
     const [refreshToken, accessToken] = await Promise.all([
       this.generateRefreshToken(payload),
       this.generateAccessToken(payload),
+      profile
+        ? this.usersService.update(user.id, {
+            languageCode: profile.language,
+            pictureURL: profile.picture,
+            googleUserId: profile.id,
+          })
+        : null,
     ]);
 
     await this.authSessionsService.update(authSession.id, { refreshToken }, false);

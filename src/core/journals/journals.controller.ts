@@ -2,11 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Pa
 import { JournalsService } from './journals.service';
 import { CreateJournalDto } from './dto/create-journal.dto';
 import { UpdateJournalDto } from './dto/update-journal.dto';
-import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { UserEntity } from '../users/entities/user.entity';
 import { User } from '../auth/decorators/user.decorator';
+import { JournalEntity } from './entities/journal.entity';
+import { FindAllJournalDto } from './dto/find-all-journal.dto';
 
 @ApiBearerAuth()
 @ApiTags('Journals')
@@ -16,7 +18,8 @@ export class JournalsController {
   constructor(private readonly journalsService: JournalsService) {}
 
   @Post()
-  create(@Body() createJournalDto: CreateJournalDto) {
+  @ApiBody({ type: JournalEntity, isArray: true })
+  create(@Body() createJournalDto: CreateJournalDto[]) {
     return this.journalsService.create(createJournalDto);
   }
 
@@ -30,9 +33,13 @@ export class JournalsController {
     return this.journalsService.findByLesson(userId, lessonId);
   }
 
+  @ApiResponse({ type: JournalEntity, isArray: true })
   @Get('/')
-  findAll() {
-    return this.journalsService.findAll();
+  findAll(@Query() query?: FindAllJournalDto) {
+    const onlyIds = query.onlyIds;
+    delete query.onlyIds;
+
+    return this.journalsService.findAll(query, onlyIds);
   }
 
   @Get('/:id')
@@ -40,13 +47,25 @@ export class JournalsController {
     return this.journalsService.findOne(id);
   }
 
-  @Patch('/:id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateJournalDto: UpdateJournalDto) {
-    return this.journalsService.update(id, updateJournalDto);
+  @ApiBody({ type: UpdateJournalDto, isArray: true })
+  @Patch('/many')
+  updateMany(@Body() payloads: UpdateJournalDto[]) {
+    return this.journalsService.updateMany(payloads);
+  }
+
+  @Patch('/')
+  async update(@Body() payload: UpdateJournalDto) {
+    return this.journalsService.updateMany([payload]).then((arr) => arr.pop());
+  }
+
+  @ApiBody({ type: Number, isArray: true })
+  @Delete('/many')
+  removeMany(@Body() ids: number[]) {
+    return this.journalsService.removeMany(ids);
   }
 
   @Delete('/:id')
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.journalsService.remove(id);
+    return this.journalsService.removeMany([id]);
   }
 }

@@ -9,7 +9,7 @@ export class CreateGroupDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  elderId?: number | null;
+  leaderId?: number | null;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -20,4 +20,9 @@ export class CreateGroupDto {
   @IsOptional()
   @IsString()
   googleSheetsURL?: string | null;
+
+  @ApiPropertyOptional({ default: '' })
+  @IsOptional()
+  @IsString()
+  checksumOfJournalContent?: string;
 }

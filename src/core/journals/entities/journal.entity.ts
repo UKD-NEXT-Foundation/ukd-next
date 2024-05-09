@@ -40,13 +40,13 @@ export class JournalEntity {
   @Column({ select: false })
   studentId!: number;
 
-  @ApiProperty()
-  @Column({ type: 'date' })
-  date!: Date;
+  @ApiProperty({ nullable: true })
+  @Column({ type: 'date', nullable: true })
+  date?: Date | null;
 
-  @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture })
-  @Column({ enum: ScheduleType, default: ScheduleType.Lecture })
-  type?: ScheduleType;
+  @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture, nullable: true })
+  @Column({ enum: ScheduleType, default: ScheduleType.Lecture, nullable: true })
+  type?: ScheduleType | null;
 
   @ApiProperty()
   @Column({ type: 'varchar', length: 3 })

@@ -11,7 +11,6 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -26,21 +25,21 @@ export class GroupEntity {
   @Column()
   name: string;
 
-  @ApiProperty({ type: () => UserEntity })
-  @OneToOne(() => UserEntity, { nullable: true })
-  @JoinColumn({ name: 'elderId' })
-  elder?: UserEntity | null;
-
-  @Column({ nullable: true })
-  elderId?: number | null;
-
-  @ApiProperty({ type: () => UserEntity })
-  @OneToOne(() => UserEntity, { nullable: true })
+  @ApiProperty({ type: () => UserEntity, nullable: true })
+  @ManyToOne(() => UserEntity, (user) => user.groupsByCurator, { nullable: true })
   @JoinColumn({ name: 'curatorId' })
   curator?: UserEntity | null;
 
-  @Column({ nullable: true })
+  @Column({ select: false, nullable: true })
   curatorId?: number | null;
+
+  @ApiProperty({ type: () => UserEntity, nullable: true })
+  @ManyToOne(() => UserEntity, (user) => user.groupsByLeader, { nullable: true })
+  @JoinColumn({ name: 'leaderId' })
+  leader?: UserEntity | null;
+
+  @Column({ select: false, nullable: true })
+  leaderId?: number | null;
 
   @ApiProperty({ type: () => UserEntity, isArray: true })
   @OneToMany(() => UserEntity, (user) => user.group)
@@ -49,6 +48,10 @@ export class GroupEntity {
   @ApiProperty({ default: null })
   @Column({ nullable: true, default: null })
   googleSheetsURL: string | null;
+
+  @ApiProperty({ default: '' })
+  @Column({ default: '' })
+  checksumOfJournalContent?: string;
 
   @ApiProperty()
   @CreateDateColumn()

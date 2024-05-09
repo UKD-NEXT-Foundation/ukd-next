@@ -11,7 +11,7 @@ import { UserRole } from './enums/user-role.enum';
 export class UsersService {
   constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
-  create(createUserDto: CreateUserDto) {
+  create(createUserDto: CreateUserDto[]) {
     return this.userRepository.save(createUserDto);
   }
 
@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   findOne(whereOptions: FindOptionsWhere<UserEntity>) {
-    return this.userRepository.findOne({ where: whereOptions, relations: ['group', 'group.elder', 'group.curator'] });
+    return this.userRepository.findOne({ where: whereOptions, relations: ['group'] });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

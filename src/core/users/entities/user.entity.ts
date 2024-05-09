@@ -30,8 +30,8 @@ export class UserEntity {
   @Column()
   fullname!: string;
 
-  @ApiProperty({ default: null })
-  @Column({ default: null })
+  @ApiProperty({ default: null, nullable: true })
+  @Column({ default: null, nullable: true })
   phone?: string | null;
 
   @ApiProperty({ enum: UserRole, isArray: true, default: [UserRole.Student] })
@@ -42,17 +42,17 @@ export class UserEntity {
   @Column({ type: 'enum', enum: AuthProvider })
   authProvider!: AuthProvider;
 
-  @ApiProperty({ default: null })
-  @Column({ default: null })
+  @ApiProperty({ default: null, nullable: true })
+  @Column({ default: null, nullable: true })
   googleUserId?: string | null;
 
-  @ApiProperty()
-  @Column({ default: 'en' })
-  languageCode?: string;
+  @ApiProperty({ default: 'en', nullable: true })
+  @Column({ default: 'en', nullable: true })
+  languageCode?: string | null;
 
-  @ApiProperty({ default: '' })
-  @Column({ default: '' })
-  pictureURL?: string;
+  @ApiProperty({ default: null, nullable: true })
+  @Column({ default: null, nullable: true })
+  pictureURL?: string | null;
 
   @ApiProperty()
   @CreateDateColumn()
@@ -66,12 +66,18 @@ export class UserEntity {
   authSessions?: AuthSessionEntity[];
 
   @ApiProperty({ type: GroupEntity, nullable: true })
-  @ManyToOne(() => GroupEntity, (group) => group.students)
+  @ManyToOne(() => GroupEntity, (group) => group.students, { nullable: true })
   @JoinColumn({ name: 'groupId' })
   group?: GroupEntity | null;
 
-  @Column({ select: false,  nullable: true })
+  @Column({ select: false, nullable: true })
   groupId?: number | null;
+
+  @OneToMany(() => GroupEntity, (group) => group.curator)
+  groupsByCurator?: GroupEntity[];
+
+  @OneToMany(() => GroupEntity, (group) => group.leader)
+  groupsByLeader?: GroupEntity[];
 
   @OneToMany(() => ScheduleEntity, (schedule) => schedule.teacher)
   schedules?: ScheduleEntity[];
