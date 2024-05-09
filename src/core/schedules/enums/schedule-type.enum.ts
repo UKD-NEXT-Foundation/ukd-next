@@ -1,6 +1,6 @@
 export enum ScheduleType {
   Lecture = 'LECTURE',
-  Practical = 'PRACTICAL',
+  Practical = 'PRACTICE',
   Seminar = 'SEMINAR',
   Exam = "EXAM",
   CreditWork = "CREDIT_WORK",

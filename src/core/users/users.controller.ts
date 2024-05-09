@@ -16,10 +16,11 @@ import { FindAllUsersDto } from './dto/find-all-users.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiCreatedResponse({ type: UserEntity })
+  @ApiCreatedResponse({ type: UserEntity, isArray: true })
+  @ApiBody({ type: CreateUserDto, isArray: true })
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Post()
-  create(@Body() payload: CreateUserDto) {
+  create(@Body() payload: CreateUserDto[]) {
     return this.usersService.create(payload);
   }
 
@@ -39,12 +40,12 @@ export class UsersController {
         ? {
             id: user.group.id,
             name: user.group.name,
-            elder: user.group.elder
+            leader: user.group.leader
               ? {
-                  id: user.group.elder.id,
-                  email: user.group.elder.email,
-                  fullname: user.group.elder.fullname,
-                  phone: user.group.elder.phone,
+                  id: user.group.leader.id,
+                  email: user.group.leader.email,
+                  fullname: user.group.leader.fullname,
+                  phone: user.group.leader.phone,
                 }
               : null,
             curator: user.group.curator

@@ -53,6 +53,8 @@ export class SchedulesService {
         'teacher.email',
         'classroom.id',
         'classroom.name',
+        'classroom.isOnline',
+        'classroom.onlineLink',
         'groups.id',
         'groups.name',
       ])
