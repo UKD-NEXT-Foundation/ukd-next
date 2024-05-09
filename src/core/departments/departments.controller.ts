@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from 
 import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { DepartmentEntity } from './entities/department.entity';
 
 @ApiTags('Departments')
@@ -10,9 +10,10 @@ import { DepartmentEntity } from './entities/department.entity';
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
-  @ApiCreatedResponse({ type: DepartmentEntity })
+  @ApiCreatedResponse({ type: DepartmentEntity, isArray: true })
+  @ApiBody({ type: CreateDepartmentDto, isArray: true })
   @Post()
-  create(@Body() createDepartmentDto: CreateDepartmentDto) {
+  create(@Body() createDepartmentDto: CreateDepartmentDto[]) {
     return this.departmentsService.create(createDepartmentDto);
   }
 
