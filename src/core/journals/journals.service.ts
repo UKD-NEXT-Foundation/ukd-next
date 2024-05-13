@@ -51,14 +51,19 @@ export class JournalsService {
       throw new NotFoundException(`Not found lesson by id: '${lessonId}'`);
     }
 
-    const marks = scores.map((j) => ({ id: j.id, date: j.date, type: j.type, mark: j.mark }));
+    const marks = scores.map((j) => ({ id: j.id, date: j.date, type: j.type, mark: j.mark })).reverse();
 
-    const revised = marks.filter(({ mark }) => mark == 'B').length;
-    const skipped = marks.filter(({ mark }) => mark == 'H').length;
+    function getMarksBy(variants: string[]) {
+      return marks.filter(({ mark }) => variants.filter((variant) => mark.toUpperCase() === variant).length);
+    }
+
+    const revised = getMarksBy(['В', 'B']).length;
+    const skipped = getMarksBy(['Н', 'H']).length;
     const present = marks.length - skipped;
 
-    const averageMark =
-      marks.filter(({ mark }) => !isNaN(+mark)).reduce((acc, mark) => acc + +mark.mark, 0) / (marks.length - revised);
+    const onlyNumericMarks = marks.filter(({ mark }) => !isNaN(+mark));
+    const sum = onlyNumericMarks.reduce((acc, { mark }) => acc + +mark, 0);
+    const averageMark = sum / onlyNumericMarks.length || 0.0;
 
     return {
       lessonId,

@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   findOne(whereOptions: FindOptionsWhere<UserEntity>) {
-    return this.userRepository.findOne({ where: whereOptions, relations: ['group'] });
+    return this.userRepository.findOne({ where: whereOptions, relations: ['group', 'group.curator', 'group.leader'] });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
