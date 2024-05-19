@@ -34,9 +34,9 @@ export class FindAllJournalDto {
   @IsDate()
   type?: ScheduleType;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ default: false })
   @IsOptional()
   @Transform(({ value }) => value === 'true')
   @IsBoolean()
-  onlyIds?: boolean;
+  onlyIds?: boolean = false;
 }
