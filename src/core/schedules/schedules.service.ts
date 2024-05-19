@@ -73,11 +73,11 @@ export class SchedulesService {
     return this.scheduleRepository.findOne({ where: { id }, relations: ['classroom', 'teacher', 'groups', 'lesson'] });
   }
 
-  update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    return this.scheduleRepository.update(id, updateScheduleDto);
+  updateMany(payloads: UpdateScheduleDto[]) {
+    return Promise.all(payloads.map((payload) => this.scheduleRepository.update(payload.id, payload)));
   }
 
-  remove(id: number) {
-    return this.scheduleRepository.delete(id);
+  removeMany(ids: number[]) {
+    return this.scheduleRepository.delete(ids);
   }
 }

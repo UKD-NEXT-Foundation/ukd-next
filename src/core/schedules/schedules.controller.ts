@@ -55,13 +55,25 @@ export class SchedulesController {
     return this.schedulesService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateScheduleDto: UpdateScheduleDto) {
-    return this.schedulesService.update(id, updateScheduleDto);
+  @ApiBody({ type: UpdateScheduleDto, isArray: true })
+  @Patch('/many')
+  updateMany(@Body() payloads: UpdateScheduleDto[]) {
+    return this.schedulesService.updateMany(payloads);
+  }
+
+  @Patch()
+  update(@Body() updateScheduleDto: UpdateScheduleDto) {
+    return this.schedulesService.updateMany([updateScheduleDto]);
+  }
+
+  @ApiBody({ type: Number, isArray: true })
+  @Delete('/many')
+  removeMany(@Body() ids: number[]) {
+    return this.schedulesService.removeMany(ids);
   }
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.schedulesService.remove(id);
+    return this.schedulesService.removeMany([id]);
   }
 }
