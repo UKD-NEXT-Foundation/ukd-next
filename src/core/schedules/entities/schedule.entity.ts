@@ -24,11 +24,11 @@ export class ScheduleEntity {
 
   @ApiProperty()
   @Column({ type: 'date' })
-  date!: Date;
+  date!: Date | string;
 
   @ApiProperty()
   @Column({ type: 'time' })
-  startAt!: string; 
+  startAt!: string;
 
   @ApiProperty()
   @Column({ type: 'time' })
@@ -37,6 +37,10 @@ export class ScheduleEntity {
   @ApiProperty({ enum: ScheduleType, default: ScheduleType.Lecture })
   @Column({ enum: ScheduleType, default: ScheduleType.Lecture, nullable: true })
   type?: ScheduleType | null;
+
+  @ApiProperty({ default: false })
+  @Column({ default: false })
+  isCanceled?: boolean;
 
   @ApiProperty({ type: () => LessonEntity })
   @ManyToOne(() => LessonEntity, (lesson) => lesson.schedules)
@@ -51,7 +55,7 @@ export class ScheduleEntity {
   @JoinColumn({ name: 'teacherId' })
   teacher?: UserEntity | null;
 
-  @Column({ select: false,  nullable: true })
+  @Column({ select: false, nullable: true })
   teacherId?: number | null;
 
   @ApiProperty({ type: () => ClassroomEntity })
@@ -59,7 +63,7 @@ export class ScheduleEntity {
   @JoinColumn({ name: 'classroomId' })
   classroom?: ClassroomEntity | null;
 
-  @Column({ select: false,  nullable: true })
+  @Column({ select: false, nullable: true })
   classroomId?: number | null;
 
   @ApiProperty({ type: () => GroupEntity, isArray: true })

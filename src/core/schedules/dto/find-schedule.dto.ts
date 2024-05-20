@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsDate, IsOptional, IsNumber } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsDate, IsOptional, IsNumber, IsBoolean } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
 
 export class FindScheduleDto {
   @ApiPropertyOptional()
@@ -38,4 +38,16 @@ export class FindScheduleDto {
   @Type(() => Date)
   @IsDate()
   to?: Date;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  findAll?: boolean = false;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  onlyIds?: boolean = false;
 }

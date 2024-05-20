@@ -18,11 +18,21 @@ export class SchedulesService {
   }
 
   async findAll(findOptions: FindScheduleDto) {
+    if (
+      !findOptions.findAll &&
+      !findOptions.classroomId &&
+      !findOptions.lessonId &&
+      !findOptions.teacherId &&
+      !findOptions.groupId
+    ) {
+      return [];
+    }
+
     const where: FindOptionsWhere<ScheduleEntity> = {};
 
-    if (findOptions.teacherId) where.teacherId = findOptions.teacherId;
-    if (findOptions.classroomId) where.classroomId = findOptions.classroomId;
-    if (findOptions.lessonId) where.lessonId = findOptions.lessonId;
+    if (findOptions.teacherId && !findOptions.findAll) where.teacherId = findOptions.teacherId;
+    if (findOptions.classroomId && !findOptions.findAll) where.classroomId = findOptions.classroomId;
+    if (findOptions.lessonId && !findOptions.findAll) where.lessonId = findOptions.lessonId;
 
     if (findOptions.from && findOptions.to) {
       where.date = Between(findOptions.from, findOptions.to);
@@ -34,10 +44,7 @@ export class SchedulesService {
 
     const builder = this.scheduleRepository
       .createQueryBuilder('schedule')
-      .leftJoinAndSelect('schedule.classroom', 'classroom')
-      .leftJoinAndSelect('schedule.teacher', 'teacher')
       .leftJoinAndSelect('schedule.groups', 'groups')
-      .leftJoinAndSelect('schedule.lesson', 'lesson')
       .select([
         'schedule.id',
         'schedule.date',
@@ -46,23 +53,34 @@ export class SchedulesService {
         'schedule.type',
         'schedule.createdAt',
         'schedule.updatedAt',
-        'lesson.id',
-        'lesson.name',
-        'teacher.id',
-        'teacher.fullname',
-        'teacher.email',
-        'classroom.id',
-        'classroom.name',
-        'classroom.isOnline',
-        'classroom.onlineLink',
-        'groups.id',
-        'groups.name',
-      ])
-      .orderBy('schedule.date', 'ASC')
-      .addOrderBy('schedule.startAt', 'ASC')
-      .where(where);
+        'schedule.isCanceled',
+      ]);
 
-    if (findOptions?.groupId) {
+    if (findOptions.onlyIds) {
+      builder.addSelect(['schedule.lessonId', 'schedule.teacherId', 'schedule.classroomId', 'groups.id']);
+    } else {
+      builder
+        .leftJoinAndSelect('schedule.classroom', 'classroom')
+        .leftJoinAndSelect('schedule.teacher', 'teacher')
+        .leftJoinAndSelect('schedule.lesson', 'lesson')
+        .addSelect([
+          'lesson.id',
+          'lesson.name',
+          'teacher.id',
+          'teacher.fullname',
+          'teacher.email',
+          'classroom.id',
+          'classroom.name',
+          'classroom.isOnline',
+          'classroom.onlineLink',
+          'groups.id',
+          'groups.name',
+        ]);
+    }
+
+    builder.orderBy('schedule.date', 'ASC').addOrderBy('schedule.startAt', 'ASC').where(where);
+
+    if (findOptions?.groupId && !findOptions.findAll) {
       builder.andWhere('groups.id = :groupId', findOptions);
     }
 
@@ -73,11 +91,11 @@ export class SchedulesService {
     return this.scheduleRepository.findOne({ where: { id }, relations: ['classroom', 'teacher', 'groups', 'lesson'] });
   }
 
-  update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    return this.scheduleRepository.update(id, updateScheduleDto);
+  updateMany(payloads: UpdateScheduleDto[]) {
+    return Promise.all(payloads.map((payload) => this.scheduleRepository.update(payload.id, payload)));
   }
 
-  remove(id: number) {
-    return this.scheduleRepository.delete(id);
+  removeMany(ids: number[]) {
+    return this.scheduleRepository.delete(ids);
   }
 }

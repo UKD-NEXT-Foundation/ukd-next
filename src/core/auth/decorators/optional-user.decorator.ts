@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { IExpressRequest } from '@app/common/interfaces';
 import { UserEntity } from '@app/core/users/entities/user.entity';
 

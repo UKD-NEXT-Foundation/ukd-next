@@ -3,9 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
-import { FindOptionsWhere, Repository, In } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { FindAllUsersDto } from './dto/find-all-users.dto';
-import { UserRole } from './enums/user-role.enum';
 
 @Injectable()
 export class UsersService {
