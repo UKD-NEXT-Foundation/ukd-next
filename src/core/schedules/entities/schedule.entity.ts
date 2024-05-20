@@ -24,7 +24,7 @@ export class ScheduleEntity {
 
   @ApiProperty()
   @Column({ type: 'date' })
-  date!: Date;
+  date!: Date | string;
 
   @ApiProperty()
   @Column({ type: 'time' })

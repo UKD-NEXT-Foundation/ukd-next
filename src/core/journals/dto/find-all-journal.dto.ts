@@ -1,7 +1,7 @@
 import { ScheduleType } from '@app/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsBooleanString, IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 export class FindAllJournalDto {
   @ApiPropertyOptional()

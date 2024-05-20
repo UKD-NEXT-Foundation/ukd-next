@@ -1,18 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
 import { JournalsService } from './journals.service';
 import { CreateJournalDto } from './dto/create-journal.dto';
 import { UpdateJournalDto } from './dto/update-journal.dto';
-import { ApiBearerAuth, ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { AuthGuard } from '../auth/guards/auth.guard';
-import { UserEntity } from '../users/entities/user.entity';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '../auth/decorators/user.decorator';
 import { JournalEntity } from './entities/journal.entity';
 import { FindAllJournalDto } from './dto/find-all-journal.dto';
 
 @ApiBearerAuth()
 @ApiTags('Journals')
-// @UseGuards(AuthGuard, RolesGuard)
 @Controller('/journals')
 export class JournalsController {
   constructor(private readonly journalsService: JournalsService) {}
