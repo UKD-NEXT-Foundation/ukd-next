@@ -10,6 +10,7 @@ import { SchedulesModule } from './schedules/schedules.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
 import { JournalsModule } from './journals/journals.module';
+import { VariablesModule } from './variables/variables.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { JournalsModule } from './journals/journals.module';
     SchedulesModule,
     UsersModule,
     JournalsModule,
+    VariablesModule,
   ],
 })
 export class CoreModule {
