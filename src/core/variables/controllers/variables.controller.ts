@@ -1,17 +1,17 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { VariablesService } from './variables.service';
-import { CreateVariableDto } from './dto/create-variable.dto';
-import { UpdateVariableDto } from './dto/update-variable.dto';
+import { VariablesService } from '../variables.service';
+import { CreateVariableDto } from '../dto/create-variable.dto';
+import { UpdateVariableDto } from '../dto/update-variable.dto';
 import { AuthGuard, RolesGuard } from '@app/common/guards';
-import { UserRole } from '../users/enums/user-role.enum';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { VariableEntity } from './entities/variable.entity';
+import { UserRole } from '../../users/enums/user-role.enum';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { VariableEntity } from '../entities/variable.entity';
 
 @ApiBearerAuth()
 @ApiTags('Variables')
-// @UseGuards(AuthGuard, RolesGuard)
-// @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
 @Controller('variables')
 export class VariablesController {
   constructor(private readonly variablesService: VariablesService) {}

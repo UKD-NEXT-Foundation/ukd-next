@@ -16,14 +16,9 @@ export class VariablesService {
     return this.variableRepository.save(payloads);
   }
 
-  async createDefault(payloads: CreateVariableDto[]) {
-    const hasKeys = await this.variableRepository.find({
-      where: { key: In(payloads.map(({ key }) => key)) },
-      select: ['key'],
-    });
-
-    const missingKeys = payloads.filter(({ key }) => !hasKeys.some((item) => item.key === key));
-    return this.variableRepository.save(missingKeys);
+  async createDefault(payload: CreateVariableDto) {
+    const isHave = await this.findOne(payload.key);
+    return isHave ?? this.variableRepository.save(payload);
   }
 
   findAll(keys?: string[]) {
