@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { config, GlobalConfig, typeormConfig } from '@app/src/configs';
 import { TypeOrmFilterProvider } from '@app/common/exception-filters';
-import { CoreModule } from '@app/core/core.module';
+import { ApiModule } from '@app/api/api.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
@@ -18,7 +18,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       useFactory: typeormConfig,
     }),
     ScheduleModule.forRoot(),
-    CoreModule,
+    ApiModule,
   ],
   providers: [TypeOrmFilterProvider],
 })

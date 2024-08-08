@@ -22,7 +22,7 @@
     "paths": {
       "@app/common/*": ["src/common/*"],
       "@app/providers/*": ["src/providers/*"],
-      "@app/core/*": ["src/core/*"],
+      "@app/api/*": ["src/api/*"],
       "@app/src/*": ["src/*"]
     }
   }
