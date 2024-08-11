@@ -1,40 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { LessonEntity } from './entities/lesson.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Lessons')
 @Controller('lessons')
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
 
-  @ApiCreatedResponse({ type: LessonEntity })
   @Post()
-  create(@Body() createLessonDto: CreateLessonDto) {
-    return this.lessonsService.create(createLessonDto);
+  create(@Body() payload: CreateLessonDto) {
+    return this.lessonsService.create(payload);
   }
 
-  @ApiOkResponse({ type: LessonEntity, isArray: true })
   @Get()
   findAll() {
     return this.lessonsService.findAll();
   }
 
-  @ApiOkResponse({ type: LessonEntity })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.lessonsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateLessonDto: UpdateLessonDto) {
-    return this.lessonsService.update(id, updateLessonDto);
+  @Patch()
+  update(@Body() payload: UpdateLessonDto) {
+    return this.lessonsService.update(payload);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.lessonsService.remove(id);
   }
 }

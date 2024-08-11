@@ -1,11 +1,11 @@
 import {
   IsEmail,
   IsEnum,
-  IsNumber,
   IsOptional,
   IsPhoneNumber,
   IsString,
   IsUrl,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -15,10 +15,12 @@ import { Transform } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateUserDto {
+  @ApiProperty()
   @Transform(({ value }) => value.trim().toLowerCase())
   @IsEmail()
   email!: string;
 
+  @ApiProperty()
   @IsString()
   fullname!: string;
 
@@ -55,6 +57,6 @@ export class CreateUserDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber({})
-  groupId?: number;
+  @IsUUID()
+  groupId?: string | null;
 }

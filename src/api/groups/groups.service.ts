@@ -1,34 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { GroupEntity } from './entities/group.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class GroupsService {
-  constructor(
-    @InjectRepository(GroupEntity)
-    private readonly groupRepository: Repository<GroupEntity>,
-  ) {}
+  private readonly groups = this.prismaService.groupModel;
 
-  create(payload: CreateGroupDto | CreateGroupDto[]) {
-    return this.groupRepository.save(Array.isArray(payload) ? payload : [payload]);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateGroupDto) {
+    const data = this.prepareDataForCreation(payload);
+    return this.groups.create({ data });
+  }
+
+  createMany(payloads: CreateGroupDto[]) {
+    const data = payloads.map(this.prepareDataForCreation);
+    return this.groups.createManyAndReturn({ data });
   }
 
   findAll() {
-    return this.groupRepository.find({ relations: ['students'] });
+    return this.groups.findMany({ include: { students: true } });
   }
 
-  findOne(id: number) {
-    return this.groupRepository.findOneBy({ id });
+  findOne(id: string) {
+    return this.groups.findUnique({ where: { id } });
   }
 
-  update(id: number, updateGroupDto: UpdateGroupDto) {
-    return this.groupRepository.update(id, updateGroupDto);
+  update(payload: UpdateGroupDto) {
+    const { id, ...data } = payload;
+    return this.groups.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.groupRepository.delete(id);
+  remove(id: string) {
+    return this.groups.delete({ where: { id } });
+  }
+
+  private prepareDataForCreation(payload: CreateGroupDto) {
+    return { ...payload, id: uuidv7() };
   }
 }

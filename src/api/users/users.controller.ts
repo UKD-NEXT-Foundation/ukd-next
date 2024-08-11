@@ -1,82 +1,70 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  ParseUUIDPipe,
+  Query,
+  ParseArrayPipe,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { Roles, User } from '@app/common/decorators';
 import { AuthGuard, RolesGuard } from '@app/common/guards';
 import { UserRole } from './enums/user-role.enum';
-import { UserEntity } from './entities/user.entity';
 import { FindAllUsersDto } from './dto/find-all-users.dto';
 
 @ApiBearerAuth()
 @ApiTags('Users')
 @UseGuards(AuthGuard, RolesGuard)
-@Controller('users')
+@Controller('/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ApiCreatedResponse({ type: UserEntity, isArray: true })
-  @ApiBody({ type: CreateUserDto, isArray: true })
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Post()
-  create(@Body() payload: CreateUserDto[]) {
+  create(@Body() payload: CreateUserDto) {
     return this.usersService.create(payload);
   }
 
-  @ApiOkResponse({ type: UserEntity, isArray: true })
+  @ApiBody({ type: CreateUserDto, isArray: true })
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
+  @Post('/many')
+  createMany(@Body(new ParseArrayPipe({ items: CreateUserDto })) payloads: CreateUserDto[]) {
+    return this.usersService.createMany(payloads);
+  }
+
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Get()
   findAll(@Query() query: FindAllUsersDto) {
     return this.usersService.findAll(query);
   }
 
-  @ApiOkResponse({ type: UserEntity })
   @Get('/profile')
-  findMe(@User() user: UserEntity) {
-    return {
-      ...user,
-      group: user.group
-        ? {
-            id: user.group.id,
-            name: user.group.name,
-            leader: user.group.leader
-              ? {
-                  id: user.group.leader.id,
-                  email: user.group.leader.email,
-                  fullname: user.group.leader.fullname,
-                  phone: user.group.leader.phone,
-                }
-              : null,
-            curator: user.group.curator
-              ? {
-                  id: user.group.curator.id,
-                  email: user.group.curator.email,
-                  fullname: user.group.curator.fullname,
-                  phone: user.group.curator.phone,
-                }
-              : null,
-          }
-        : null,
-    };
+  findMe(@User() user: ReturnType<typeof this.findOne>) {
+    return user;
   }
 
-  @ApiOkResponse({ type: UserEntity })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne({ id });
   }
 
-  @ApiBody({ type: UpdateUserDto })
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateUserDto) {
-    return this.usersService.update(id, payload);
+  @Patch()
+  update(@Body() payload: UpdateUserDto) {
+    return this.usersService.update(payload);
   }
 
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.remove(id);
   }
 }

@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AuthSessionsService } from './auth-sessions.service';
 import { AuthSessionsController } from './auth-sessions.controller';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthSessionEntity } from './entities/auth-session.entity';
+import { DatabaseModule } from '@app/src/database/database.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AuthSessionEntity])],
+  imports: [DatabaseModule],
   controllers: [AuthSessionsController],
   providers: [AuthSessionsService],
   exports: [AuthSessionsService],

@@ -1,31 +1,32 @@
 import { ScheduleType } from '@app/common/enums';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { JournalModel } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
 
-export class CreateJournalDto {
+export class CreateJournalDto implements Omit<JournalModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
-  @IsNumber()
-  lessonId!: number;
-
-  @ApiProperty()
-  @IsNumber()
-  teacherId!: number;
+  @IsUUID()
+  lessonId!: string;
 
   @ApiProperty()
-  @IsNumber()
-  studentId!: number;
+  @IsUUID()
+  teacherId!: string;
+
+  @ApiProperty()
+  @IsUUID()
+  studentId!: string;
 
   @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture, nullable: true })
   @IsOptional()
   @IsEnum(ScheduleType)
-  type?: ScheduleType | null;
+  type: ScheduleType | null;
 
   @ApiPropertyOptional({ nullable: true })
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  date?: Date | null;
+  date: Date | null;
 
   @ApiProperty({ example: '4' })
   @IsString()

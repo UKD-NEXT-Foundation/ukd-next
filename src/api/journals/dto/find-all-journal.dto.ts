@@ -1,38 +1,36 @@
 import { ScheduleType } from '@app/common/enums';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { JournalModel } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsBoolean, IsDate, IsEnum, IsOptional, IsUUID } from 'class-validator';
 
-export class FindAllJournalDto {
+export class FindAllJournalDto implements Omit<JournalModel, 'id' | 'mark' | 'createdAt' | 'updatedAt'> {
   @ApiPropertyOptional()
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  lessonId?: number;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  teacherId?: number;
+  @IsUUID()
+  lessonId: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Type(() => Number)
-  @IsNumber()
-  studentId?: number;
+  @IsUUID()
+  teacherId: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  studentId: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @Type(() => Date)
   @IsDate()
-  date?: Date;
+  date: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsEnum(ScheduleType)
   @IsDate()
-  type?: ScheduleType;
+  type: ScheduleType;
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()

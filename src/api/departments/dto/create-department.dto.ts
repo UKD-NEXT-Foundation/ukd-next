@@ -1,13 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { IsString, IsOptional, IsUUID } from 'class-validator';
+import { DepartmentModel } from '@prisma/client';
 
-export class CreateDepartmentDto {
+export class CreateDepartmentDto implements Omit<DepartmentModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
   @IsString()
   name!: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  headOfDepartmentId?: number;
+  @IsUUID()
+  headOfDepartmentId: string | null;
 }

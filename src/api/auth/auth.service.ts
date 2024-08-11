@@ -4,21 +4,21 @@ import { google } from 'googleapis';
 import ms from 'ms';
 import { AuthSessionsService } from '@app/api/auth-sessions/auth-sessions.service';
 import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
-import { UserEntity } from '@app/api/users/entities/user.entity';
 import { UsersService } from '@app/api/users/users.service';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
 import { AuthProvider } from '@app/common/enums';
+import { UserModel } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(GlobalConfig)
     private readonly config: GlobalConfigType,
-    private readonly jwtService: JwtService,
     private readonly authSessionsService: AuthSessionsService,
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async verifyAccessToken(accessToken: string) {
@@ -47,21 +47,19 @@ export class AuthService {
       return this.createSession(user, userAgent, profile);
     }
 
-    const newUser = await this.usersService.create([
-      {
-        fullname: `${profile.given_name} ${profile.family_name}`,
-        authProvider: AuthProvider.Google,
-        languageCode: profile.language,
-        pictureURL: profile.picture,
-        googleUserId: profile.id,
-        email: profile.email,
-      },
-    ]);
+    const newUser = await this.usersService.create({
+      fullname: `${profile.given_name} ${profile.family_name}`,
+      authProvider: AuthProvider.Google,
+      languageCode: profile.language,
+      pictureURL: profile.picture,
+      googleUserId: profile.id,
+      email: profile.email,
+    });
 
-    return this.createSession(newUser[0], userAgent);
+    return this.createSession(newUser, userAgent);
   }
 
-  private async createSession(user: UserEntity, userAgent: string, profile?: IGoogleProfile) {
+  private async createSession(user: UserModel, userAgent: string, profile?: IGoogleProfile) {
     const authSession = await this.authSessionsService.create({
       expiresIn: new Date(Date.now() + ms(this.config.jwtRefreshTokenExpiresIn) * 1000),
       refreshToken: 'The process of creating sessions continues...',
@@ -80,7 +78,8 @@ export class AuthService {
       this.generateRefreshToken(payload),
       this.generateAccessToken(payload),
       profile
-        ? this.usersService.update(user.id, {
+        ? this.usersService.update({
+            id: user.id,
             languageCode: profile.language,
             pictureURL: profile.picture,
             googleUserId: profile.id,
@@ -88,7 +87,7 @@ export class AuthService {
         : null,
     ]);
 
-    await this.authSessionsService.update(authSession.id, { refreshToken }, false);
+    await this.authSessionsService.update({ id: authSession.id, refreshToken });
 
     return { refreshToken, accessToken };
   }
@@ -104,7 +103,7 @@ export class AuthService {
 
       const [accessToken] = await Promise.all([
         this.generateAccessToken(payload),
-        this.authSessionsService.update(payload.sessionId, { lastTokenUpdateAt: new Date() }, false),
+        this.authSessionsService.update({ id: payload.sessionId, lastTokenUpdateAt: new Date() }),
       ]);
 
       return { accessToken };
@@ -123,9 +122,9 @@ export class AuthService {
         ignoreExpiration: true,
       });
 
-      const { affected } = await this.authSessionsService.remove(payload.sessionId);
+      const deletedSession = await this.authSessionsService.remove(payload.sessionId);
 
-      if (affected) {
+      if (deletedSession) {
         return { statusCode: HttpStatus.OK, message: 'Session successfully deleted' };
       }
 

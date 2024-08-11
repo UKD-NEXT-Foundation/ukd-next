@@ -1,41 +1,35 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsDate, IsOptional, IsNumber, IsEnum, IsBoolean } from 'class-validator';
+import { IsDate, IsOptional, IsEnum, IsBoolean, IsUUID } from 'class-validator';
 import { ScheduleType } from '../enums/schedule-type.enum';
 import { IsTime } from '@app/common/decorators';
 import { formatTime } from '@app/common/functions';
+import { ScheduleModel } from '@prisma/client';
 
-export class CreateScheduleDto {
+export class CreateScheduleDto implements Omit<ScheduleModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
-  @IsNumber()
-  lessonId!: number;
+  @IsUUID()
+  lessonId!: string;
 
   @ApiPropertyOptional({ enum: ScheduleType, default: ScheduleType.Lecture })
   @IsOptional()
   @IsEnum(ScheduleType)
-  type?: ScheduleType;
+  type: ScheduleType;
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()
   @IsBoolean()
-  isCanceled?: boolean;
+  isCanceled: boolean;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  teacherId!: number | null;
+  @IsUUID()
+  teacherId!: string | null;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  classroomId!: number | null;
-
-  @ApiPropertyOptional({ isArray: true })
-  @IsOptional()
-  @IsNumber({}, { each: true })
-  groupIds?: number[];
-
-  groups?: { id: number }[];
+  @IsUUID()
+  classroomId!: string | null;
 
   @ApiProperty()
   @Type(() => Date)
@@ -45,10 +39,10 @@ export class CreateScheduleDto {
   @ApiProperty({ example: '10:00' })
   @IsTime()
   @Transform(({ value }) => formatTime(value))
-  startAt!: string;
+  startAt!: Date;
 
   @ApiProperty({ example: '11:20' })
   @IsTime()
   @Transform(({ value }) => formatTime(value))
-  endAt!: string;
+  endAt!: Date;
 }

@@ -1,34 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { NewsEntity } from './entities/news.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class NewsService {
-  constructor(
-    @InjectRepository(NewsEntity)
-    private readonly newsRepository: Repository<NewsEntity>,
-  ) {}
+  private readonly news = this.prismaService.newsModel;
 
-  create(createNewsDto: CreateNewsDto) {
-    return this.newsRepository.save(createNewsDto);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateNewsDto) {
+    return this.news.create({ data: { ...payload, id: uuidv7() } });
   }
 
-  findAll() {
-    return this.newsRepository.find({ relations: ['author'], order: { createdAt: 'DESC' } });
+  findAll(where?: Prisma.NewsModelWhereInput) {
+    return this.news.findMany({ where, orderBy: { createdAt: 'desc' }, include: { author: true } });
   }
 
-  findOne(id: number) {
-    return this.newsRepository.findOne({ relations: ['author'], where: { id } });
+  findOne(id: string) {
+    return this.news.findUnique({ where: { id }, include: { author: true } });
   }
 
-  update(id: number, updateNewsDto: UpdateNewsDto) {
-    return this.newsRepository.update(id, updateNewsDto);
+  update(payload: UpdateNewsDto) {
+    const { id, ...data } = payload;
+    return this.news.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.newsRepository.delete(id);
+  remove(id: string) {
+    return this.news.delete({ where: { id } });
   }
 }

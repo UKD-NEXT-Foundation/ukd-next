@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { VariableModel } from '@prisma/client';
 import { IsOptional, IsString } from 'class-validator';
 
-export class CreateVariableDto {
+export class CreateVariableDto implements Omit<VariableModel, 'createdAt' | 'updatedAt'> {
   @ApiProperty()
   @IsString()
   key!: string;
@@ -9,5 +10,5 @@ export class CreateVariableDto {
   @ApiPropertyOptional({ nullable: true })
   @IsOptional()
   @IsString()
-  value?: string | null;
+  value: string | null;
 }

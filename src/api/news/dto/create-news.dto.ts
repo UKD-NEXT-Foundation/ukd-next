@@ -1,12 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber } from 'class-validator';
+import { NewsModel } from '@prisma/client';
+import { IsString, IsUUID } from 'class-validator';
 
-export class CreateNewsDto {
+export class CreateNewsDto implements Omit<NewsModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
   @IsString()
-  сontent!: string;
+  content!: string;
 
   @ApiProperty()
-  @IsNumber()
-  authorId!: number;
+  @IsUUID()
+  authorId!: string;
 }

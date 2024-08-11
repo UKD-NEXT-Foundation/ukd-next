@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
-import { IRequirements } from '../interfaces/classroom-features.interface';
+import { ClassroomModel, Prisma } from '@prisma/client';
 
-export class CreateClassroomDto {
+export class CreateClassroomDto implements Omit<ClassroomModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
   @IsString()
   name!: string;
@@ -10,22 +10,22 @@ export class CreateClassroomDto {
   @ApiPropertyOptional({ default: '' })
   @IsOptional()
   @IsString()
-  description?: string;
+  description: string = '';
 
   @ApiPropertyOptional({ default: false })
   @IsOptional()
   @IsBoolean()
-  isOnline?: boolean;
+  isOnline: boolean = false;
 
   @ApiPropertyOptional({ default: null })
   @IsOptional()
   @IsUrl()
-  onlineLink?: string | null;
+  onlineLink: string | null = null;
 
   @ApiPropertyOptional({ default: true })
   @IsOptional()
   @IsBoolean()
-  isUseForSchedule?: boolean;
+  isUseForSchedule: boolean = true;
 
   @ApiProperty()
   @IsNumber()
@@ -34,5 +34,5 @@ export class CreateClassroomDto {
   @ApiPropertyOptional({ default: {} })
   @IsOptional()
   @IsObject()
-  availableRequirements?: IRequirements;
+  availableRequirements: Prisma.JsonValue = {};
 }

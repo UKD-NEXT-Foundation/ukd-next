@@ -1,36 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAuthSessionDto } from './dto/create-auth-session.dto';
 import { UpdateAuthSessionDto } from './dto/update-auth-session.dto';
-import { AuthSessionEntity } from './entities/auth-session.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class AuthSessionsService {
-  constructor(
-    @InjectRepository(AuthSessionEntity)
-    private readonly authSessionRepository: Repository<AuthSessionEntity>,
-  ) {}
+  private readonly authSessions = this.prismaService.authSessionModel;
+
+  constructor(private readonly prismaService: PrismaService) {}
 
   create(payload: CreateAuthSessionDto) {
-    return this.authSessionRepository.save(payload);
+    return this.authSessions.create({ data: { ...payload, id: uuidv7() } });
   }
 
   findAll() {
-    return this.authSessionRepository.find();
+    return this.authSessions.findMany();
   }
 
-  findOne(id: number) {
-    return this.authSessionRepository.findOneBy({ id });
+  findOne(id: string) {
+    return this.authSessions.findUnique({ where: { id } });
   }
 
-  async update(id: number, payload: UpdateAuthSessionDto, returnResults = true) {
-    await this.authSessionRepository.update(id, payload);
-    if (returnResults) return this.findOne(id);
-    return null;
+  update(payload: UpdateAuthSessionDto) {
+    const { id, ...data } = payload;
+    return this.authSessions.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.authSessionRepository.delete(id);
+  remove(id: string) {
+    return this.authSessions.delete({ where: { id } });
   }
 }

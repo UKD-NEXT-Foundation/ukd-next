@@ -2,39 +2,34 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from 
 import { ClassroomsService } from './classrooms.service';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
 import { UpdateClassroomDto } from './dto/update-classroom.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ClassroomEntity } from './entities/classroom.entity';
-
+import { ApiTags } from '@nestjs/swagger';
 @ApiTags('Classrooms')
-@Controller('classrooms')
+@Controller('/classrooms')
 export class ClassroomsController {
   constructor(private readonly classroomsService: ClassroomsService) {}
 
-  @ApiCreatedResponse({ type: ClassroomEntity })
   @Post()
-  create(@Body() createClassroomDto: CreateClassroomDto) {
-    return this.classroomsService.create(createClassroomDto);
+  create(@Body() payload: CreateClassroomDto) {
+    return this.classroomsService.create(payload);
   }
 
-  @ApiOkResponse({ type: ClassroomEntity, isArray: true })
   @Get()
   findAll() {
     return this.classroomsService.findAll();
   }
 
-  @ApiOkResponse({ type: ClassroomEntity })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseIntPipe) id: string) {
     return this.classroomsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateClassroomDto: UpdateClassroomDto) {
-    return this.classroomsService.update(id, updateClassroomDto);
+  @Patch()
+  update(@Body() payload: UpdateClassroomDto) {
+    return this.classroomsService.update(payload);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: string) {
     return this.classroomsService.remove(id);
   }
 }

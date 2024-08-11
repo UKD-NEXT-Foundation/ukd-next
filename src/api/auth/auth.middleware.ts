@@ -3,6 +3,7 @@ import { Response, NextFunction } from 'express';
 import { AuthService } from './auth.service';
 import { UsersService } from '@app/api/users/users.service';
 import { IExpressRequest } from '@app/common/interfaces';
+
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
   constructor(
@@ -21,7 +22,7 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const accessToken = req.headers.authorization.split(' ').pop();
       const jwtPayload = await this.authService.verifyAccessToken(accessToken);
-      const user = await this.usersService.findOne({ id: jwtPayload.userId });
+      const user = await this.usersService.findOne({ id: jwtPayload.userId as unknown as string });
 
       req.user = user;
       req.sessionId = jwtPayload.sessionId;

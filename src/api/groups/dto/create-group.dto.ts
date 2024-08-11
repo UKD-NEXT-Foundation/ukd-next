@@ -1,28 +1,34 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNumber, IsOptional } from 'class-validator';
+import { GroupModel } from '@prisma/client';
+import { IsString, IsOptional, IsUUID } from 'class-validator';
 
-export class CreateGroupDto {
+export class CreateGroupDto implements Omit<GroupModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
   @IsString()
   name: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  leaderId?: number | null;
+  @IsUUID()
+  leaderId: string | null;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsNumber()
-  curatorId?: number | null;
+  @IsUUID()
+  curatorId: string | null;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  departmentId: string | null;
 
   @ApiPropertyOptional({ default: null })
   @IsOptional()
   @IsString()
-  googleSheetsURL?: string | null;
+  googleSheetsURL: string | null;
 
   @ApiPropertyOptional({ default: '' })
   @IsOptional()
   @IsString()
-  checksumOfJournalContent?: string;
+  checksumOfJournalContent: string;
 }

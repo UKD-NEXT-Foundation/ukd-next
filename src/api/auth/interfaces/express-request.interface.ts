@@ -1,7 +1,7 @@
 import { Request } from 'express';
-import { UserEntity } from '@app/api/users/entities/user.entity';
+import { UserModel } from '@prisma/client';
 
 export interface IExpressRequest extends Request {
-  user?: UserEntity | null;
-  sessionId?: number | null;
+  user?: UserModel | null;
+  sessionId?: string | null;
 }

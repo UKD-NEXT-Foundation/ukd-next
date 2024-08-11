@@ -1,11 +1,12 @@
-import { IsDate, IsJWT, IsNumber, IsOptional, IsString } from 'class-validator';
+import { AuthSessionModel } from '@prisma/client';
+import { IsDate, IsOptional, IsString, IsUUID } from 'class-validator';
 
-export class CreateAuthSessionDto {
-  @IsJWT()
+export class CreateAuthSessionDto implements Omit<AuthSessionModel, 'id' | 'createdAt' | 'updatedAt'> {
+  @IsString()
   refreshToken!: string;
 
-  @IsNumber()
-  userId!: number;
+  @IsUUID()
+  userId!: string;
 
   @IsString()
   userAgent!: string;
@@ -15,5 +16,5 @@ export class CreateAuthSessionDto {
 
   @IsOptional()
   @IsDate()
-  lastTokenUpdateAt?: Date;
+  lastTokenUpdateAt: Date = new Date();
 }

@@ -1,34 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { LessonEntity } from './entities/lesson.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class LessonsService {
-  constructor(
-    @InjectRepository(LessonEntity)
-    private readonly lessonRepository: Repository<LessonEntity>,
-  ) {}
+  private readonly lessons = this.prismaService.lessonModel;
 
-  create(createLessonDto: CreateLessonDto) {
-    return this.lessonRepository.save(createLessonDto);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateLessonDto) {
+    return this.lessons.create({ data: { ...payload, id: uuidv7() } });
   }
 
   findAll() {
-    return this.lessonRepository.find({ relations: ['department'] });
+    return this.lessons.findMany({ include: { department: true } });
   }
 
-  findOne(id: number) {
-    return this.lessonRepository.findOneBy({ id });
+  findOne(id: string) {
+    return this.lessons.findUnique({ where: { id } });
   }
 
-  update(id: number, updateLessonDto: UpdateLessonDto) {
-    return this.lessonRepository.update(id, updateLessonDto);
+  update(payload: UpdateLessonDto) {
+    const { id, ...data } = payload;
+    return this.lessons.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.lessonRepository.delete(id);
+  remove(id: string) {
+    return this.lessons.delete({ where: { id } });
   }
 }

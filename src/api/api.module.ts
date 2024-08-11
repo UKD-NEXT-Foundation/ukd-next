@@ -9,8 +9,10 @@ import { NewsModule } from './news/news.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { AuthModule } from './auth/auth.module';
 import { AuthMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
+import { PrismaExceptionFilter } from '@app/common/filters';
 import { JournalsModule } from './journals/journals.module';
 import { VariablesModule } from './variables/variables.module';
+import { APP_FILTER } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -25,6 +27,12 @@ import { VariablesModule } from './variables/variables.module';
     UsersModule,
     JournalsModule,
     VariablesModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: PrismaExceptionFilter,
+    },
   ],
 })
 export class ApiModule {

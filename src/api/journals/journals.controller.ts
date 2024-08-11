@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  ParseUUIDPipe,
+  ParseArrayPipe,
+} from '@nestjs/common';
 import { JournalsService } from './journals.service';
 import { CreateJournalDto } from './dto/create-journal.dto';
 import { UpdateJournalDto } from './dto/update-journal.dto';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from '../auth/decorators/user.decorator';
-import { JournalEntity } from './entities/journal.entity';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { FindAllJournalDto } from './dto/find-all-journal.dto';
+import { User } from '@app/common/decorators';
 
 @ApiBearerAuth()
 @ApiTags('Journals')
@@ -14,23 +24,26 @@ export class JournalsController {
   constructor(private readonly journalsService: JournalsService) {}
 
   @Post()
-  @ApiBody({ type: JournalEntity, isArray: true })
-  create(@Body() createJournalDto: CreateJournalDto[]) {
-    return this.journalsService.create(createJournalDto);
+  create(@Body() payload: CreateJournalDto) {
+    return this.journalsService.create(payload);
+  }
+
+  @Post('/many')
+  createMany(@Body(new ParseArrayPipe({ items: CreateJournalDto })) payloads: CreateJournalDto[]) {
+    return this.journalsService.createMany(payloads);
   }
 
   @Get('/all-avalible-lesssons')
-  findAllAvalibleLessons(@User('id') userId: number) {
+  findAllAvalibleLessons(@User('id') userId: string) {
     return this.journalsService.findAllAvalibleLessons(userId);
   }
 
   @Get('/by-lesson/:lessonId')
-  findByLesson(@User('id') userId: number, @Param('lessonId', ParseIntPipe) lessonId: number) {
+  findByLesson(@Param('lessonId', ParseUUIDPipe) lessonId: string, @User('id') userId: string) {
     return this.journalsService.findByLesson(userId, lessonId);
   }
 
-  @ApiResponse({ type: JournalEntity, isArray: true })
-  @Get('/')
+  @Get()
   findAll(@Query() query?: FindAllJournalDto) {
     const onlyIds = query.onlyIds;
     delete query.onlyIds;
@@ -39,29 +52,28 @@ export class JournalsController {
   }
 
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.journalsService.findOne(id);
+  }
+
+  @Patch()
+  async update(@Body() payload: UpdateJournalDto) {
+    return this.journalsService.update(payload);
   }
 
   @ApiBody({ type: UpdateJournalDto, isArray: true })
   @Patch('/many')
-  updateMany(@Body() payloads: UpdateJournalDto[]) {
-    return this.journalsService.updateMany(payloads);
-  }
-
-  @Patch('/')
-  async update(@Body() payload: UpdateJournalDto) {
-    return this.journalsService.updateMany([payload]).then((arr) => arr.pop());
-  }
-
-  @ApiBody({ type: Number, isArray: true })
-  @Delete('/many')
-  removeMany(@Body() ids: number[]) {
-    return this.journalsService.removeMany(ids);
+  updateMany(@Body(new ParseArrayPipe({ items: UpdateJournalDto })) payloads: UpdateJournalDto[]) {
+    return Promise.all(payloads.map(this.journalsService.update));
   }
 
   @Delete('/:id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.journalsService.removeMany([id]);
+  }
+
+  @Delete('/many')
+  removeMany(@Body() ids: string[]) {
+    return this.journalsService.removeMany(ids);
   }
 }

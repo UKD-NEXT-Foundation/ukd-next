@@ -1,40 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, ParseArrayPipe } from '@nestjs/common';
 import { GroupsService } from './groups.service';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { GroupEntity } from './entities/group.entity';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Groups')
-@Controller('groups')
+@Controller('/groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 
-  @ApiCreatedResponse({ type: GroupEntity, isArray: true })
   @Post()
-  create(@Body() payload: CreateGroupDto[]) {
+  create(@Body() payload: CreateGroupDto) {
     return this.groupsService.create(payload);
   }
 
-  @ApiOkResponse({ type: GroupEntity, isArray: true })
+  @ApiBody({ type: CreateGroupDto, isArray: true })
+  @Post('/many')
+  createMany(@Body(new ParseArrayPipe({ items: CreateGroupDto })) payloads: CreateGroupDto[]) {
+    return this.groupsService.createMany(payloads);
+  }
+
   @Get()
   findAll() {
     return this.groupsService.findAll();
   }
 
-  @ApiOkResponse({ type: GroupEntity })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.groupsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateGroupDto) {
-    return this.groupsService.update(id, payload);
+  @Patch()
+  update(@Body() payload: UpdateGroupDto) {
+    return this.groupsService.update(payload);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.groupsService.remove(id);
   }
 }

@@ -1,34 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
 import { UpdateClassroomDto } from './dto/update-classroom.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ClassroomEntity } from './entities/classroom.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class ClassroomsService {
-  constructor(
-    @InjectRepository(ClassroomEntity)
-    private readonly classroomsRepository: Repository<ClassroomEntity>,
-  ) {}
+  private readonly classrooms = this.prismaService.classroomModel;
 
-  create(createClassroomDto: CreateClassroomDto) {
-    return this.classroomsRepository.save(createClassroomDto);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateClassroomDto) {
+    return this.classrooms.create({ data: { ...payload, id: uuidv7() } });
   }
 
   findAll() {
-    return this.classroomsRepository.find();
+    return this.classrooms.findMany();
   }
 
-  findOne(id: number) {
-    return this.classroomsRepository.findOneBy({ id });
+  findOne(id: string) {
+    return this.classrooms.findUnique({ where: { id } });
   }
 
-  update(id: number, updateClassroomDto: UpdateClassroomDto) {
-    return this.classroomsRepository.update(id, updateClassroomDto);
+  update(payload: UpdateClassroomDto) {
+    const { id, ...data } = payload;
+    return this.classrooms.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.classroomsRepository.delete(id);
+  remove(id: string) {
+    return this.classrooms.delete({ where: { id } });
   }
 }

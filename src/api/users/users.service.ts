@@ -1,39 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
-import { FindAllUsersDto } from './dto/find-all-users.dto';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { Prisma } from '@prisma/client';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
+  private readonly users = this.prismaService.userModel;
 
-  create(createUserDto: CreateUserDto[]) {
-    return this.userRepository.save(createUserDto);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateUserDto) {
+    const data = this.prepareDataForCreation(payload);
+    return this.users.create({ data });
   }
 
-  findAll(findOptions?: FindAllUsersDto) {
-    const whereOptions: FindOptionsWhere<UserEntity> = findOptions;
-
-    if (findOptions.role) {
-      whereOptions.roles = [findOptions.role] as any;
-      delete whereOptions['role'];
-    }
-
-    return this.userRepository.find({ where: whereOptions, relations: ['group'] });
+  createMany(payloads: CreateUserDto[]) {
+    const data = payloads.map(this.prepareDataForCreation);
+    return this.users.createManyAndReturn({ data });
   }
 
-  findOne(whereOptions: FindOptionsWhere<UserEntity>) {
-    return this.userRepository.findOne({ where: whereOptions, relations: ['group', 'group.curator', 'group.leader'] });
+  findAll(where?: Prisma.UserModelWhereInput) {
+    return this.users.findMany({ where, include: { group: true } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(id, updateUserDto);
+  findOne(where: Prisma.UserModelWhereUniqueInput) {
+    return this.users.findUnique({
+      include: { group: { include: { leader: true, curator: true } } },
+      where,
+    });
   }
 
-  remove(id: number) {
-    return this.userRepository.delete(id);
+  update(payload: UpdateUserDto) {
+    const { id, ...data } = payload;
+    return this.users.update({ where: { id }, data });
+  }
+
+  remove(id: string) {
+    return this.users.delete({ where: { id } });
+  }
+
+  private prepareDataForCreation(payload: CreateUserDto) {
+    return { ...payload, id: uuidv7(), email: payload.email.toLowerCase() };
   }
 }

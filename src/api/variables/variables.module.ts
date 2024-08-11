@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { VariablesService } from './variables.service';
 import { VariablesController } from './controllers/variables.controller';
-import { VariableEntity } from './entities/variable.entity';
 import { FeatureFlagsController } from './controllers/feature-flags.controller';
 import { PaymentCredentialsController } from './controllers/payment-credentials.controller';
+import { DatabaseModule } from '@app/src/database/database.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([VariableEntity])],
+  imports: [DatabaseModule],
   controllers: [VariablesController, FeatureFlagsController, PaymentCredentialsController],
   providers: [VariablesService],
   exports: [VariablesService],

@@ -1,44 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { In, Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CreateVariableDto } from './dto/create-variable.dto';
 import { UpdateVariableDto } from './dto/update-variable.dto';
-import { VariableEntity } from './entities/variable.entity';
+import { PrismaService } from '@app/src/database/prisma.service';
 
 @Injectable()
 export class VariablesService {
-  constructor(
-    @InjectRepository(VariableEntity)
-    private readonly variableRepository: Repository<VariableEntity>,
-  ) {}
+  private readonly variables = this.prismaService.variableModel;
 
-  create(payloads: CreateVariableDto[]) {
-    return this.variableRepository.save(payloads);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateVariableDto) {
+    this.variables.create({ data: payload });
+  }
+
+  createMany(payloads: CreateVariableDto[]) {
+    return this.variables.createManyAndReturn({ data: payloads });
   }
 
   async createDefault(payload: CreateVariableDto) {
     const isHave = await this.findOne(payload.key);
-    return isHave ?? this.variableRepository.save(payload);
+    return isHave ?? this.variables.create({ data: payload });
   }
 
-  findAll(keys?: string[]) {
-    if (keys) {
-      return this.variableRepository.findBy({ key: In(keys ?? []) });
-    }
-    return this.variableRepository.find();
+  findAll(keys: string[] = []) {
+    return this.variables.findMany({ where: { key: keys.length ? { in: keys } : {} } });
   }
 
   findOne(key: string) {
-    return this.variableRepository.findOneBy({ key });
+    return this.variables.findUnique({ where: { key } });
   }
 
-  async update({ key, value }: UpdateVariableDto) {
-    const { affected } = await this.variableRepository.update(key, { value });
-    return !!affected;
+  update({ key, value }: UpdateVariableDto) {
+    return this.variables.update({ where: { key }, data: { value } });
   }
 
-  async remove(key: string) {
-    const { affected } = await this.variableRepository.delete(key);
-    return !!affected;
+  remove(key: string) {
+    return this.variables.delete({ where: { key } });
   }
 }

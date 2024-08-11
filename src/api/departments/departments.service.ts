@@ -1,34 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DepartmentEntity } from './entities/department.entity';
-import { Repository } from 'typeorm';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class DepartmentsService {
-  constructor(
-    @InjectRepository(DepartmentEntity)
-    private readonly departmentRepository: Repository<DepartmentEntity>,
-  ) {}
+  private readonly departments = this.prismaService.departmentModel;
 
-  create(createDepartmentDto: CreateDepartmentDto[]) {
-    return this.departmentRepository.save(createDepartmentDto);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateDepartmentDto) {
+    const data = this.prepareDataForCreation(payload);
+    return this.departments.create({ data });
+  }
+
+  createMany(payloads: CreateDepartmentDto[]) {
+    const data = payloads.map(this.prepareDataForCreation);
+    return this.departments.createManyAndReturn({ data });
   }
 
   findAll() {
-    return this.departmentRepository.find({ relations: ['headOfDepartment'] });
+    return this.departments.findMany({ include: { headOfDepartment: true } });
   }
 
-  findOne(id: number) {
-    return this.departmentRepository.findOneBy({ id });
+  findOne(id: string) {
+    return this.departments.findUnique({ where: { id } });
   }
 
-  update(id: number, updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentRepository.update(id, updateDepartmentDto);
+  update(payload: UpdateDepartmentDto) {
+    const { id, ...data } = payload;
+    return this.departments.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.departmentRepository.delete(id);
+  remove(id: string) {
+    return this.departments.delete({ where: { id } });
+  }
+
+  private prepareDataForCreation(payload: CreateDepartmentDto) {
+    return { ...payload, id: uuidv7() };
   }
 }

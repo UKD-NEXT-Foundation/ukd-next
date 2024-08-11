@@ -1,47 +1,63 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateJournalDto } from './dto/create-journal.dto';
 import { UpdateJournalDto } from './dto/update-journal.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { JournalEntity } from './entities/journal.entity';
-import { FindOptionsWhere, Repository } from 'typeorm';
 import { LessonsService } from '../lessons/lessons.service';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { Prisma } from '@prisma/client';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class JournalsService {
+  private readonly journals = this.prismaService.journalModel;
+
   constructor(
-    @InjectRepository(JournalEntity)
-    private readonly journalRepository: Repository<JournalEntity>,
+    private readonly prismaService: PrismaService,
     private readonly lessonsService: LessonsService,
   ) {}
 
-  create(payload: CreateJournalDto[]): Promise<JournalEntity[]> {
-    return this.journalRepository.save(payload);
+  create(payload: CreateJournalDto) {
+    return this.journals.create({ data: payload });
   }
 
-  findAll(where?: FindOptionsWhere<JournalEntity>, onlyIds: boolean = false) {
-    if (onlyIds) {
-      return this.journalRepository.find({
-        select: ['id', 'lessonId', 'teacherId', 'studentId', 'date', 'type', 'mark', 'createdAt', 'updatedAt'],
-        where,
-      });
+  createMany(payloads: CreateJournalDto[]) {
+    const data = payloads.map(this.prepareDataForCreation);
+    return this.journals.createManyAndReturn({ data });
+  }
+
+  findAll(where?: Prisma.JournalModelWhereInput, onlyIds: boolean = false) {
+    if (!onlyIds) {
+      return this.journals.findMany({ where, include: { lesson: true, teacher: true, student: true } });
     }
 
-    return this.journalRepository.find({ where, relations: ['lesson', 'teacher', 'student'] });
+    return this.journals.findMany({
+      where,
+      select: {
+        teacherId: true,
+        studentId: true,
+        createdAt: true,
+        updatedAt: true,
+        lessonId: true,
+        date: true,
+        type: true,
+        mark: true,
+        id: true,
+      },
+    });
   }
 
-  async findAllAvalibleLessons(userId: number) {
-    const journals = await this.journalRepository.find({
+  async findAllAvalibleLessons(userId: string) {
+    const journals = await this.journals.findMany({
       where: { studentId: userId },
-      relations: ['lesson'],
+      include: { lesson: true },
     });
 
-    const getLessonName = (id: number) => journals.find(({ lesson }) => lesson.id === id).lesson.name;
+    const getLessonName = (id: string) => journals.find(({ lesson }) => lesson.id === id).lesson.name;
     const lessonsIds = new Set(journals.map(({ lesson }) => lesson.id));
 
     return Array.from(lessonsIds).map((id) => ({ id, name: getLessonName(id) }));
   }
 
-  async findByLesson(userId: number, lessonId: number) {
+  async findByLesson(userId: string, lessonId: string) {
     const [scores, lesson] = await Promise.all([
       this.findAll({ lessonId, studentId: userId }),
       this.lessonsService.findOne(lessonId),
@@ -78,15 +94,24 @@ export class JournalsService {
     };
   }
 
-  findOne(id: number) {
-    return this.journalRepository.findOne({ where: { id }, relations: ['lesson', 'teacher', 'student'] });
+  findOne(id: string) {
+    return this.journals.findUnique({ where: { id }, include: { lesson: true, teacher: true, student: true } });
   }
 
-  updateMany(payloads: UpdateJournalDto[]) {
-    return Promise.all(payloads.map((payload) => this.journalRepository.update(payload.id, payload)));
+  update(payload: UpdateJournalDto) {
+    const { id, ...data } = payload;
+    return this.journals.updateMany({ where: { id }, data });
   }
 
-  removeMany(ids: number[]) {
-    return this.journalRepository.delete(ids);
+  remove(id: string) {
+    return this.journals.delete({ where: { id } });
+  }
+
+  removeMany(ids: string[]) {
+    return this.journals.deleteMany({ where: { id: { in: ids } } });
+  }
+
+  private prepareDataForCreation(payload: CreateJournalDto) {
+    return { ...payload, id: uuidv7() };
   }
 }

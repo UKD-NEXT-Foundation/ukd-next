@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { AuthSessionsService } from './auth-sessions.service';
 import { CreateAuthSessionDto } from './dto/create-auth-session.dto';
 import { UpdateAuthSessionDto } from './dto/update-auth-session.dto';
@@ -26,17 +26,17 @@ export class AuthSessionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.authSessionsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateAuthSessionDto) {
-    return this.authSessionsService.update(id, payload);
+  @Patch()
+  update(@Body() payload: UpdateAuthSessionDto) {
+    return this.authSessionsService.update(payload);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.authSessionsService.remove(id);
   }
 }

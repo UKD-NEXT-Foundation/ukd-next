@@ -1,23 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ScheduleEntity } from './entities/schedule.entity';
-import { FindOptionsWhere, Between, Repository, MoreThanOrEqual, LessThanOrEqual } from 'typeorm';
 import { FindScheduleDto } from './dto/find-schedule.dto';
+import { PrismaService } from '@app/src/database/prisma.service';
+import { Prisma } from '@prisma/client';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class SchedulesService {
-  constructor(
-    @InjectRepository(ScheduleEntity)
-    private readonly scheduleRepository: Repository<ScheduleEntity>,
-  ) {}
+  private readonly schedules = this.prismaService.scheduleModel;
 
-  create(payload: CreateScheduleDto[]) {
-    return this.scheduleRepository.save(payload);
+  constructor(private readonly prismaService: PrismaService) {}
+
+  create(payload: CreateScheduleDto) {
+    const data = this.prepareDataForCreation(payload);
+    return this.schedules.create({ data });
   }
 
-  async findAll(findOptions: FindScheduleDto) {
+  createMany(payloads: CreateScheduleDto[]) {
+    const data = payloads.map(this.prepareDataForCreation);
+    return this.schedules.createManyAndReturn({ data });
+  }
+
+  async findAll(findOptions?: FindScheduleDto) {
     if (
       !findOptions.findAll &&
       !findOptions.classroomId &&
@@ -28,74 +33,74 @@ export class SchedulesService {
       return [];
     }
 
-    const where: FindOptionsWhere<ScheduleEntity> = {};
+    const where: Prisma.ScheduleModelWhereInput = {
+      teacherId: findOptions.teacherId && !findOptions.findAll ? findOptions.teacherId : undefined,
+      classroomId: findOptions.classroomId && !findOptions.findAll ? findOptions.classroomId : undefined,
+      lessonId: findOptions.lessonId && !findOptions.findAll ? findOptions.lessonId : undefined,
+      date:
+        findOptions.from || findOptions.to
+          ? {
+              gte: findOptions.from,
+              lte: findOptions.to,
+            }
+          : undefined,
+      groups: findOptions.groupId && !findOptions.findAll ? { some: { groupId: findOptions.groupId } } : undefined, // groupId is used instead of id
+    };
 
-    if (findOptions.teacherId && !findOptions.findAll) where.teacherId = findOptions.teacherId;
-    if (findOptions.classroomId && !findOptions.findAll) where.classroomId = findOptions.classroomId;
-    if (findOptions.lessonId && !findOptions.findAll) where.lessonId = findOptions.lessonId;
-
-    if (findOptions.from && findOptions.to) {
-      where.date = Between(findOptions.from, findOptions.to);
-    } else if (findOptions.from) {
-      where.date = MoreThanOrEqual(findOptions.from);
-    } else if (findOptions.to) {
-      where.date = LessThanOrEqual(findOptions.to);
-    }
-
-    const builder = this.scheduleRepository
-      .createQueryBuilder('schedule')
-      .leftJoinAndSelect('schedule.groups', 'groups')
-      .select([
-        'schedule.id',
-        'schedule.date',
-        'schedule.startAt',
-        'schedule.endAt',
-        'schedule.type',
-        'schedule.createdAt',
-        'schedule.updatedAt',
-        'schedule.isCanceled',
-      ]);
-
-    if (findOptions.onlyIds) {
-      builder.addSelect(['schedule.lessonId', 'schedule.teacherId', 'schedule.classroomId', 'groups.id']);
-    } else {
-      builder
-        .leftJoinAndSelect('schedule.classroom', 'classroom')
-        .leftJoinAndSelect('schedule.teacher', 'teacher')
-        .leftJoinAndSelect('schedule.lesson', 'lesson')
-        .addSelect([
-          'lesson.id',
-          'lesson.name',
-          'teacher.id',
-          'teacher.fullname',
-          'teacher.email',
-          'classroom.id',
-          'classroom.name',
-          'classroom.isOnline',
-          'classroom.onlineLink',
-          'groups.id',
-          'groups.name',
-        ]);
-    }
-
-    builder.orderBy('schedule.date', 'ASC').addOrderBy('schedule.startAt', 'ASC').where(where);
-
-    if (findOptions?.groupId && !findOptions.findAll) {
-      builder.andWhere('groups.id = :groupId', findOptions);
-    }
-
-    return builder.getMany();
+    return this.schedules.findMany({
+      where,
+      orderBy: [{ date: 'asc' }, { startAt: 'asc' }],
+      select: {
+        id: true,
+        date: true,
+        startAt: true,
+        endAt: true,
+        type: true,
+        createdAt: true,
+        updatedAt: true,
+        isCanceled: true,
+        ...(findOptions.onlyIds
+          ? {
+              lessonId: true,
+              teacherId: true,
+              classroomId: true,
+              groups: { select: { groupId: true } },
+            }
+          : {
+              lesson: { select: { id: true, name: true } },
+              teacher: { select: { id: true, fullname: true, email: true } },
+              classroom: { select: { id: true, name: true, isOnline: true, onlineLink: true } },
+              groups: { select: { group: { select: { id: true, name: true } } } },
+            }),
+      },
+    });
   }
 
-  findOne(id: number) {
-    return this.scheduleRepository.findOne({ where: { id }, relations: ['classroom', 'teacher', 'groups', 'lesson'] });
+  findOne(id: string) {
+    return this.schedules.findUnique({
+      where: { id },
+      include: { classroom: true, lesson: true, groups: true, teacher: true },
+    });
   }
 
-  updateMany(payloads: UpdateScheduleDto[]) {
-    return Promise.all(payloads.map((payload) => this.scheduleRepository.update(payload.id, payload)));
+  update(payload: UpdateScheduleDto) {
+    const { id, ...data } = payload;
+    return this.schedules.update({ where: { id }, data });
   }
 
-  removeMany(ids: number[]) {
-    return this.scheduleRepository.delete(ids);
+  remove(id: string) {
+    return this.schedules.delete({ where: { id } });
+  }
+
+  removeMany(ids: string[]) {
+    return this.schedules.deleteMany({ where: { id: { in: ids } } });
+  }
+
+  private prepareDataForCreation(payload: CreateScheduleDto) {
+    if (new Date(`1970-01-01T${payload.startAt}`) > new Date(`1970-01-01T${payload.endAt}`)) {
+      throw new ConflictException('endAt must not be less than startAt');
+    }
+
+    return { ...payload, id: uuidv7() };
   }
 }

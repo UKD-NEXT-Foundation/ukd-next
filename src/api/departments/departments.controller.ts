@@ -1,41 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
-import { DepartmentsService } from './departments.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, ParseArrayPipe } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { DepartmentEntity } from './entities/department.entity';
+import { DepartmentsService } from './departments.service';
 
 @ApiTags('Departments')
 @Controller('departments')
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}
 
-  @ApiCreatedResponse({ type: DepartmentEntity, isArray: true })
-  @ApiBody({ type: CreateDepartmentDto, isArray: true })
   @Post()
-  create(@Body() createDepartmentDto: CreateDepartmentDto[]) {
-    return this.departmentsService.create(createDepartmentDto);
+  create(@Body() payload: CreateDepartmentDto) {
+    return this.departmentsService.create(payload);
   }
 
-  @ApiOkResponse({ type: DepartmentEntity, isArray: true })
+  @ApiBody({ type: CreateDepartmentDto, isArray: true })
+  @Post('/many')
+  createMany(@Body(new ParseArrayPipe({ items: CreateDepartmentDto })) payloads: CreateDepartmentDto[]) {
+    return this.departmentsService.createMany(payloads);
+  }
+
   @Get()
   findAll() {
     return this.departmentsService.findAll();
   }
 
-  @ApiOkResponse({ type: DepartmentEntity })
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.departmentsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentsService.update(id, updateDepartmentDto);
+  @Patch()
+  update(@Body() payload: UpdateDepartmentDto) {
+    return this.departmentsService.update(payload);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.departmentsService.remove(id);
   }
 }

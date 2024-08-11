@@ -1,8 +1,8 @@
-import { IRequirements } from '@app/api/classrooms/interfaces/classroom-features.interface';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { LessonModel, Prisma } from '@prisma/client';
 import { IsNumber, IsObject, IsOptional, IsString } from 'class-validator';
 
-export class CreateLessonDto {
+export class CreateLessonDto implements Omit<LessonModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
   @IsString()
   name!: string;
@@ -10,15 +10,15 @@ export class CreateLessonDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  defaultTeacherId?: number;
+  defaultTeacherId?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
-  departmentId?: number | null;
+  departmentId: string | null;
 
   @ApiPropertyOptional()
   @IsOptional()
   @IsObject()
-  classroomRequirements?: IRequirements;
+  classroomRequirements: Prisma.JsonValue;
 }

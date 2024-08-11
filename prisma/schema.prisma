@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model AuthSessionModel {
+  id                String    @id @default(uuid()) @db.Uuid
+  user              UserModel @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String    @db.Uuid
+  userAgent         String    @db.VarChar
+  refreshToken      String    @db.VarChar
+  expiresIn         DateTime  @db.Timestamp
+  lastTokenUpdateAt DateTime  @db.Timestamp
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("auth-sessions")
+}
+
+model DepartmentModel {
+  id                 String        @id @default(uuid()) @db.Uuid
+  name               String        @unique @db.VarChar
+  headOfDepartment   UserModel?    @relation(fields: [headOfDepartmentId], references: [id], onDelete: SetNull)
+  headOfDepartmentId String?       @db.Uuid
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  groups             GroupModel[]
+  lessons            LessonModel[]
+
+  @@map("departments")
+}
+
+model GroupModel {
+  id                       String                   @id @default(uuid()) @db.Uuid
+  name                     String                   @db.VarChar
+  leader                   UserModel?               @relation("LeaderGroup", fields: [leaderId], references: [id])
+  leaderId                 String?                  @db.Uuid
+  curator                  UserModel?               @relation("CuratorGroup", fields: [curatorId], references: [id])
+  curatorId                String?                  @db.Uuid
+  department               DepartmentModel?         @relation(fields: [departmentId], references: [id])
+  departmentId             String?                  @db.Uuid
+  googleSheetsURL          String?                  @db.VarChar
+  checksumOfJournalContent String                   @default("") @db.VarChar
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+  students                 UserModel[]              @relation("StudentGroup")
+  schedules                GroupsOnSchedulesModel[]
+
+  @@map("groups")
+}
+
+model JournalModel {
+  id        String        @id @default(uuid()) @db.Uuid
+  lesson    LessonModel   @relation(fields: [lessonId], references: [id])
+  lessonId  String        @db.Uuid
+  teacher   UserModel     @relation("TeacherJournal", fields: [teacherId], references: [id])
+  teacherId String        @db.Uuid
+  student   UserModel     @relation("StudentJournal", fields: [studentId], references: [id])
+  studentId String        @db.Uuid
+  date      DateTime?     @db.Date
+  type      ScheduleType? @default(LECTURE)
+  mark      String        @db.VarChar(3)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("journals")
+}
+
+model LessonModel {
+  id                    String           @id @default(uuid()) @db.Uuid
+  name                  String           @unique() @db.VarChar
+  department            DepartmentModel? @relation(fields: [departmentId], references: [id])
+  departmentId          String?          @db.Uuid
+  classroomRequirements Json             @default("{}") @db.Json
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+  journals              JournalModel[]
+  schedules             ScheduleModel[]
+
+  @@map("lessons")
+}
+
+model NewsModel {
+  id        String    @id @default(uuid()) @db.Uuid
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  author    UserModel @relation(fields: [authorId], references: [id])
+  authorId  String    @db.Uuid
+
+  @@map("news")
+}
+
+model ScheduleModel {
+  id          String                   @id @default(uuid()) @db.Uuid
+  date        DateTime                 @db.Date
+  startAt     DateTime                 @db.Time
+  endAt       DateTime                 @db.Time
+  type        ScheduleType?            @default(LECTURE)
+  isCanceled  Boolean                  @default(false)
+  lesson      LessonModel              @relation(fields: [lessonId], references: [id])
+  lessonId    String                   @db.Uuid
+  teacher     UserModel?               @relation(fields: [teacherId], references: [id])
+  teacherId   String?                  @db.Uuid
+  classroom   ClassroomModel?          @relation(fields: [classroomId], references: [id])
+  classroomId String?                  @db.Uuid
+  createdAt   DateTime                 @default(now())
+  updatedAt   DateTime                 @updatedAt
+  groups      GroupsOnSchedulesModel[]
+
+  @@map("schedules")
+}
+
+model GroupsOnSchedulesModel {
+  schedule   ScheduleModel @relation(fields: [scheduleId], references: [id])
+  scheduleId String        @db.Uuid
+  group      GroupModel    @relation(fields: [groupId], references: [id])
+  groupId    String        @db.Uuid
+
+  @@id([scheduleId, groupId])
+  @@map("groups-on-schedules")
+}
+
+model UserModel {
+  id              String             @id @default(uuid()) @db.Uuid
+  email           String             @unique @db.VarChar
+  fullname        String             @db.VarChar
+  phone           String?            @db.VarChar
+  roles           Role[]             @default([STUDENT])
+  authProvider    AuthProvider
+  googleUserId    String?            @db.VarChar
+  languageCode    String?            @default("en") @db.VarChar
+  pictureURL      String?            @db.VarChar
+  group           GroupModel?        @relation("StudentGroup", fields: [groupId], references: [id])
+  groupId         String?            @db.Uuid
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  authSessions    AuthSessionModel[]
+  departments     DepartmentModel[]
+  curatorGroups   GroupModel[]       @relation("CuratorGroup")
+  leaderGroups    GroupModel[]       @relation("LeaderGroup")
+  teacherJournals JournalModel[]     @relation("TeacherJournal")
+  studentJournal  JournalModel[]     @relation("StudentJournal")
+  news            NewsModel[]
+  schedule        ScheduleModel[]
+
+  @@map("users")
+}
+
+model VariableModel {
+  key       String   @id @db.VarChar
+  value     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("variables")
+}
+
+model ClassroomModel {
+  id                    String          @id @default(uuid()) @db.Uuid
+  name                  String          @db.VarChar
+  description           String          @default("") @db.VarChar
+  isOnline              Boolean         @default(false)
+  isUseForSchedule      Boolean         @default(true)
+  numberOfSeats         Int
+  availableRequirements Json            @default("{}") @db.Json
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  onlineLink            String?         @db.VarChar
+  schedule              ScheduleModel[]
+
+  @@map("classrooms")
+}
+
+enum AuthProvider {
+  INTERNAL
+  GOOGLE
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  MODERATOR
+  ADMINISTRATOR
+  API_SERVICE
+}
+
+enum ScheduleType {
+  LECTURE
+  PRACTICE
+  SEMINAR
+  EXAM
+  CREDIT_WORK
+  GROUP_SESSION
+  INDIVIDUAL_MEETING
+}

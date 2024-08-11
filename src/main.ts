@@ -8,6 +8,7 @@ import { Timer } from '@app/common/functions/timer';
 import {
   GlobalConfig,
   GlobalConfigType,
+  validationPipeConfig,
   corsConfig,
   createOpenApiDocument,
   swaggerCustomOptions,
@@ -21,7 +22,7 @@ async function bootstrap() {
   const config: GlobalConfigType = app.get(GlobalConfig);
 
   app.setGlobalPrefix(config.apiPrefix);
-  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe(validationPipeConfig));
   app.use(json({ limit: '10mb' }));
   app.use(cookieParser());
   app.enableCors(corsConfig);
