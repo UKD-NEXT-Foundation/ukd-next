@@ -8,7 +8,7 @@ import { LessonsModule } from './lessons/lessons.module';
 import { NewsModule } from './news/news.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
+import { AuthMiddleware, CloudflareMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
 import { PrismaExceptionFilter } from '@app/common/filters';
 import { JournalsModule } from './journals/journals.module';
 import { VariablesModule } from './variables/variables.module';
@@ -37,6 +37,7 @@ import { APP_FILTER } from '@nestjs/core';
 })
 export class ApiModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CloudflareMiddleware).forRoutes('*');
     consumer.apply(AuthMiddleware).forRoutes('*');
     consumer.apply(HttpLoggerMiddleware).forRoutes('*');
   }

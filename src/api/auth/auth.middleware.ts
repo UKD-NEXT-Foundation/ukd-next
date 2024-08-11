@@ -11,7 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
     private readonly authService: AuthService,
   ) {}
 
-  async use(req: IExpressRequest, _res: Response, next: NextFunction) {
+  async use(req: IExpressRequest, _: Response, next: NextFunction) {
     req.user = null;
     req.sessionId = null;
 
@@ -22,11 +22,11 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const accessToken = req.headers.authorization.split(' ').pop();
       const jwtPayload = await this.authService.verifyAccessToken(accessToken);
-      const user = await this.usersService.findOne({ id: jwtPayload.userId as unknown as string });
+      const user = await this.usersService.findOne({ id: jwtPayload.userId });
 
       req.user = user;
       req.sessionId = jwtPayload.sessionId;
-    } catch (_error) {}
+    } catch (_) {}
 
     next();
   }
