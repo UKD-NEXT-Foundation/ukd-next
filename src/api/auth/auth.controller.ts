@@ -10,14 +10,16 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
+import { Request, Response } from 'express';
 import ms from 'ms';
+
+import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
+
 import { AuthService } from './auth.service';
+import { AuthByGoogleTokenDto } from './dto/auth-by-google-token.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
-import { AuthByGoogleTokenDto } from './dto/auth-by-google-token.dto';
 
 @ApiTags('Auth')
 @Controller('/auth')

@@ -1,8 +1,9 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import { IsEmail, IsEnum, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
+
 import { AuthProvider } from '../enums/auth-provider.enum';
 import { UserRole } from '../enums/user-role.enum';
-import { Transform } from 'class-transformer';
-import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FindAllUsersDto {
   @ApiPropertyOptional()

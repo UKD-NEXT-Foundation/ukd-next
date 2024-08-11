@@ -1,6 +1,7 @@
-import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { IExpressRequest } from '@app/common/interfaces';
+import { ExecutionContext, UnauthorizedException, createParamDecorator } from '@nestjs/common';
 import { UserModel } from '@prisma/client';
+
+import { IExpressRequest } from '@app/common/interfaces';
 
 export const User = createParamDecorator((data: keyof UserModel, ctx: ExecutionContext) => {
   const req: IExpressRequest = ctx.switchToHttp().getRequest();

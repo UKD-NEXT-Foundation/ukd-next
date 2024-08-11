@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { v7 as uuidv7 } from 'uuid';
+
+import { PrismaService } from '@app/src/database/prisma.service';
+
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { PrismaService } from '@app/src/database/prisma.service';
-import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class NewsService {

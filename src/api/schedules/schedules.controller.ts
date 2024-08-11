@@ -1,22 +1,24 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Query,
-  ParseUUIDPipe,
+  Get,
+  Param,
   ParseArrayPipe,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { SchedulesService } from './schedules.service';
-import { CreateScheduleDto } from './dto/create-schedule.dto';
-import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { FindScheduleDto } from './dto/find-schedule.dto';
-import { OptionalUser } from '@app/common/decorators';
 import { UserModel } from '@prisma/client';
+
+import { OptionalUser } from '@app/common/decorators';
+
+import { CreateScheduleDto } from './dto/create-schedule.dto';
+import { FindScheduleDto } from './dto/find-schedule.dto';
+import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { SchedulesService } from './schedules.service';
 
 @ApiTags('Schedules')
 @Controller('/schedules')

@@ -1,5 +1,6 @@
 import { Controller, Get, OnModuleInit } from '@nestjs/common';
 import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
+
 import { FeatureFlags } from '../default-values/feature-flags.class';
 import { VariablesService } from '../variables.service';
 

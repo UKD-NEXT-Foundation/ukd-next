@@ -1,24 +1,26 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  UseGuards,
-  ParseUUIDPipe,
-  Query,
+  Get,
+  Param,
   ParseArrayPipe,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+
 import { Roles, User } from '@app/common/decorators';
 import { AuthGuard, RolesGuard } from '@app/common/guards';
-import { UserRole } from './enums/user-role.enum';
+
+import { CreateUserDto } from './dto/create-user.dto';
 import { FindAllUsersDto } from './dto/find-all-users.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UserRole } from './enums/user-role.enum';
+import { UsersService } from './users.service';
 
 @ApiBearerAuth()
 @ApiTags('Users')

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, ParseArrayPipe } from '@nestjs/common';
-import { GroupsService } from './groups.service';
+import { Body, Controller, Delete, Get, Param, ParseArrayPipe, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { GroupsService } from './groups.service';
 
 @ApiTags('Groups')
 @Controller('/groups')

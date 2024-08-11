@@ -1,8 +1,9 @@
-import { ScheduleType } from '@app/common/enums';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { JournalModel } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';
+
+import { ScheduleType } from '@app/common/enums';
 
 export class CreateJournalDto implements Omit<JournalModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()

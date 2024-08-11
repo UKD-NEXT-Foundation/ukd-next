@@ -1,21 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Query,
-  ParseUUIDPipe,
+  Get,
+  Param,
   ParseArrayPipe,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { JournalsService } from './journals.service';
-import { CreateJournalDto } from './dto/create-journal.dto';
-import { UpdateJournalDto } from './dto/update-journal.dto';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { FindAllJournalDto } from './dto/find-all-journal.dto';
+
 import { User } from '@app/common/decorators';
+
+import { CreateJournalDto } from './dto/create-journal.dto';
+import { FindAllJournalDto } from './dto/find-all-journal.dto';
+import { UpdateJournalDto } from './dto/update-journal.dto';
+import { JournalsService } from './journals.service';
 
 @ApiBearerAuth()
 @ApiTags('Journals')

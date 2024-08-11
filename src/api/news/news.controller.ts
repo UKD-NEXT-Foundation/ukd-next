@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
-import { NewsService } from './news.service';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { CreateNewsDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { NewsService } from './news.service';
 
 @ApiTags('News')
 @Controller('news')

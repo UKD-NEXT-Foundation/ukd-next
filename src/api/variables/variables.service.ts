@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
+
+import { PrismaService } from '@app/src/database/prisma.service';
+
 import { CreateVariableDto } from './dto/create-variable.dto';
 import { UpdateVariableDto } from './dto/update-variable.dto';
-import { PrismaService } from '@app/src/database/prisma.service';
 
 @Injectable()
 export class VariablesService {

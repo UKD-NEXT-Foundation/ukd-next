@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
 import { ClassroomModel, Prisma } from '@prisma/client';
+import { IsBoolean, IsNumber, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateClassroomDto implements Omit<ClassroomModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()

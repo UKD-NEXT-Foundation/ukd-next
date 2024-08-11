@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, ParseArrayPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseArrayPipe, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+
+import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
-import { DepartmentsService } from './departments.service';
 
 @ApiTags('Departments')
 @Controller('departments')

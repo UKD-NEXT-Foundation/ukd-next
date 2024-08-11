@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { VariablesService } from './variables.service';
-import { VariablesController } from './controllers/variables.controller';
+
+import { DatabaseModule } from '@app/src/database/database.module';
+
 import { FeatureFlagsController } from './controllers/feature-flags.controller';
 import { PaymentCredentialsController } from './controllers/payment-credentials.controller';
-import { DatabaseModule } from '@app/src/database/database.module';
+import { VariablesController } from './controllers/variables.controller';
+import { VariablesService } from './variables.service';
 
 @Module({
   imports: [DatabaseModule],

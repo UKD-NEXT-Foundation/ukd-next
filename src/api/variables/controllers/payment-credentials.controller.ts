@@ -1,7 +1,8 @@
 import { Controller, Get, OnModuleInit } from '@nestjs/common';
 import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
-import { VariablesService } from '../variables.service';
+
 import { PaymentCredentials } from '../default-values/payment-credentials.class';
+import { VariablesService } from '../variables.service';
 
 @ApiTags('Payment credentials')
 @Controller('payment-credentials')

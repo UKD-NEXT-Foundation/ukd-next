@@ -1,10 +1,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateScheduleDto } from './dto/create-schedule.dto';
-import { UpdateScheduleDto } from './dto/update-schedule.dto';
-import { FindScheduleDto } from './dto/find-schedule.dto';
-import { PrismaService } from '@app/src/database/prisma.service';
 import { Prisma } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
+
+import { PrismaService } from '@app/src/database/prisma.service';
+
+import { CreateScheduleDto } from './dto/create-schedule.dto';
+import { FindScheduleDto } from './dto/find-schedule.dto';
+import { UpdateScheduleDto } from './dto/update-schedule.dto';
 
 @Injectable()
 export class SchedulesService {

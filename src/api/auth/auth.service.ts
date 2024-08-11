@@ -1,15 +1,17 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UserModel } from '@prisma/client';
 import { google } from 'googleapis';
 import ms from 'ms';
+
 import { AuthSessionsService } from '@app/api/auth-sessions/auth-sessions.service';
-import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 import { UsersService } from '@app/api/users/users.service';
-import { IJwtPayload } from './interfaces/jwt-payload.interface';
-import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
-import { IGoogleProfile } from './interfaces/google-profile.interface';
 import { AuthProvider } from '@app/common/enums';
-import { UserModel } from '@prisma/client';
+import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
+
+import { IGoogleProfile } from './interfaces/google-profile.interface';
+import { IJwtPayloadResponse } from './interfaces/jwt-payload-response.interface';
+import { IJwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {

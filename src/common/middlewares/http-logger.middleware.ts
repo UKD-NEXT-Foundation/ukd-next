@@ -1,5 +1,6 @@
-import { Response, NextFunction } from 'express';
 import { Inject, Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { NextFunction, Response } from 'express';
+
 import { IExpressRequest } from '@app/common/interfaces';
 import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 

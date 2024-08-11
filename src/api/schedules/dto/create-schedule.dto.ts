@@ -1,10 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ScheduleModel } from '@prisma/client';
 import { Transform, Type } from 'class-transformer';
-import { IsDate, IsOptional, IsEnum, IsBoolean, IsUUID } from 'class-validator';
-import { ScheduleType } from '../enums/schedule-type.enum';
+import { IsBoolean, IsDate, IsEnum, IsOptional, IsUUID } from 'class-validator';
+
 import { IsTime } from '@app/common/decorators';
 import { formatTime } from '@app/common/functions';
-import { ScheduleModel } from '@prisma/client';
+
+import { ScheduleType } from '../enums/schedule-type.enum';
 
 export class CreateScheduleDto implements Omit<ScheduleModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()

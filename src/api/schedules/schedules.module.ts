@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SchedulesService } from './schedules.service';
-import { SchedulesController } from './schedules.controller';
+
 import { DatabaseModule } from '@app/src/database/database.module';
+
+import { SchedulesController } from './schedules.controller';
+import { SchedulesService } from './schedules.service';
 
 @Module({
   imports: [DatabaseModule],

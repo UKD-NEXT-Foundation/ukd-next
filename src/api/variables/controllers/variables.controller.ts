@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { VariablesService } from '../variables.service';
+
+import { AuthGuard, RolesGuard } from '@app/common/guards';
+import { AlwaysArrayPipe } from '@app/common/pipes';
+
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { UserRole } from '../../users/enums/user-role.enum';
 import { CreateVariableDto } from '../dto/create-variable.dto';
 import { UpdateVariableDto } from '../dto/update-variable.dto';
-import { AuthGuard, RolesGuard } from '@app/common/guards';
-import { UserRole } from '../../users/enums/user-role.enum';
-import { Roles } from '../../auth/decorators/roles.decorator';
-import { AlwaysArrayPipe } from '@app/common/pipes';
+import { VariablesService } from '../variables.service';
 
 @ApiBearerAuth()
 @ApiTags('Variables')

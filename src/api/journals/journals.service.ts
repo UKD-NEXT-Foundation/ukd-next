@@ -1,10 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateJournalDto } from './dto/create-journal.dto';
-import { UpdateJournalDto } from './dto/update-journal.dto';
-import { LessonsService } from '../lessons/lessons.service';
-import { PrismaService } from '@app/src/database/prisma.service';
 import { Prisma } from '@prisma/client';
 import { v7 as uuidv7 } from 'uuid';
+
+import { PrismaService } from '@app/src/database/prisma.service';
+
+import { LessonsService } from '../lessons/lessons.service';
+import { CreateJournalDto } from './dto/create-journal.dto';
+import { UpdateJournalDto } from './dto/update-journal.dto';
 
 @Injectable()
 export class JournalsService {

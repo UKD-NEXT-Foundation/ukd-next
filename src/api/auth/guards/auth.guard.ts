@@ -1,4 +1,5 @@
-import { CanActivate, ExecutionContext, UnauthorizedException, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+
 import { IExpressRequest } from '@app/common/interfaces';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { GroupModel } from '@prisma/client';
-import { IsString, IsOptional, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateGroupDto implements Omit<GroupModel, 'id' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
