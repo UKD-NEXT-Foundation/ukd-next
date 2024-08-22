@@ -1,0 +1,253 @@
+<mxfile host="65bd71144e">
+    <diagram id="ffqto1PJ6s2ItxRmZ-IM" name="AuthSystem">
+        <mxGraphModel dx="753" dy="701" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="3" value="&lt;b style=&quot;font-size: 38px;&quot;&gt;&lt;font style=&quot;font-size: 38px;&quot;&gt;Auth System&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=38;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="80" width="240" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="/src/api/auth" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=14;fontStyle=0;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="120" width="80" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=12;rounded=1;" parent="1" source="6" target="7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Login by google" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="248.75" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=12;rounded=1;" parent="1" source="7" target="9" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="&lt;div&gt;Get user email from Google access token&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="220" y="230.01" width="170" height="87.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="True" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=14;rounded=1;" parent="1" source="9" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="False" style="edgeStyle=orthogonalEdgeStyle;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;exitX=0.5;exitY=0;exitDx=0;exitDy=0;rounded=1;" parent="1" source="9" target="14" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Checking whether a user with this address exists ?" style="rhombus;whiteSpace=wrap;html=1;fontSize=12;spacing=6;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="179.38" width="188.75" height="188.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=12;rounded=1;" parent="1" source="11" target="25" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="Generate Session id" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="243.75" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=12;rounded=1;" parent="1" source="14" target="11" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Create a new User" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="710" y="100" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=12;rounded=1;startArrow=none;" parent="1" source="36" target="27" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="&lt;p style=&quot;line-height: 80%;&quot;&gt;Generate Refresh token&lt;br&gt;&lt;br&gt;Generate Access token&lt;/p&gt;" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="890" y="237.03999999999996" width="150" height="73.44" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="Return JSON with Refresh token &amp;amp; Access token&lt;br&gt;&lt;br&gt;And set cookie&amp;nbsp;refresh_token with flag httpOnly" style="whiteSpace=wrap;html=1;rounded=1;spacing=9;" parent="1" vertex="1">
+                    <mxGeometry x="1280" y="223.28" width="180" height="100.94" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="" style="edgeStyle=none;html=1;" parent="1" source="29" target="38" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="Refresh" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="482.5" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="30">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="235.32" y="911" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="Logout" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="35.32" y="886.25" width="120" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;fontSize=12;rounded=1;endArrow=classic;endFill=1;" parent="1" source="25" target="36" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1100" y="273.70000000000005" as="sourcePoint"/>
+                        <mxPoint x="1480" y="273.79999999999995" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="Create a new session" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="1091.25" y="243.76" width="140" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="False" style="edgeStyle=none;html=1;fontSize=14;" parent="1" source="38" target="41" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="True" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" parent="1" source="38" target="46" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="470" y="507.5" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="38" value="Get&amp;nbsp;refresh token from&amp;nbsp;cookie" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="232.5" y="435" width="145" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="HTTP Exception 409&lt;br&gt;Key: 'refresh_token' not found in cookie" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="190" y="652.5" width="230" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="False" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="46" target="47">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="46" target="51">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Verify refresh token" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="520" y="443.75" width="128.75" height="128.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="HTTP Exception 401&lt;br&gt;Invalid refresh token" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="508.75" y="652.5" width="150" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="51" target="53">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="Get Session By ID&lt;br&gt;from jwt payload" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="750" y="482.5" width="147.04" height="54.38" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="53" target="55">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="Verify session" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="950" y="485" width="120" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="55" target="57">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="False" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="55" target="59">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="Session removedAt is &lt;br&gt;not NULL and&amp;nbsp;&lt;br&gt;less than &lt;br&gt;the current time" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1140" y="410" width="195" height="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="HTTP Exception 409&lt;br&gt;This session was removed" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1153.13" y="653.75" width="168.75" height="47.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="59" target="63">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1481.25" y="760" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="65" value="False" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="59" target="64">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="Session&amp;nbsp;refreshTokenHash &lt;br&gt;is not equal to the hash &lt;br&gt;of the input refreshToken" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1421" y="406.25" width="202.5" height="202.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="HTTP Exception 409&lt;br&gt;This refresh token is not original" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1425.6899999999998" y="655" width="193.13" height="47.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="64" target="66">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="Update Session SET updatedAt to current Date&amp;nbsp;" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1700" y="478.13" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="66" target="68">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="Generate Access token" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1930" y="482.5" width="155" height="51.87" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="Return JSON with Access token" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="2130" y="476.885" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="False" style="edgeStyle=none;html=1;fontSize=14;" edge="1" parent="1" source="79" target="80">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="True" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=14;" edge="1" parent="1" source="79" target="83">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="465.32" y="911.25" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="79" value="Get&amp;nbsp;refresh token from&amp;nbsp;cookie" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="227.82" y="838.75" width="145" height="145" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="HTTP Exception 409&lt;br&gt;Key: 'refresh_token' not found in cookie" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="185.32" y="1056.25" width="230" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="False" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="83" target="84">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="83" target="86">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="Verify refresh token" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="515.32" y="847.5" width="128.75" height="128.75" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="HTTP Exception 401&lt;br&gt;Invalid refresh token" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="504.07" y="1056.25" width="150" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="86" target="88">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="Get Session By ID&lt;br&gt;from jwt payload" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="745.32" y="886.25" width="147.04" height="54.38" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="88" target="91">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="Verify session" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="945.32" y="888.75" width="120" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;" edge="1" parent="1" source="91" target="92">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" value="False" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="91" target="94">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="Session removedAt is &lt;br&gt;not NULL and&amp;nbsp;&lt;br&gt;less than &lt;br&gt;the current time" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1135.32" y="813.75" width="195" height="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="HTTP Exception 409&lt;br&gt;This session was removed" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1148.45" y="1057.5" width="168.75" height="47.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="94" target="95">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1476.57" y="1163.75" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="98" value="False" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="94" target="97">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="Session&amp;nbsp;refreshTokenHash &lt;br&gt;is not equal to the hash &lt;br&gt;of the input refreshToken" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1416.32" y="810" width="202.5" height="202.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="HTTP Exception 409&lt;br&gt;This refresh token is not original" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1421.0099999999998" y="1058.75" width="193.13" height="47.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="97" target="99">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="Update Session SET removedAt to current Date&amp;nbsp;" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1700" y="881.88" width="180" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="False" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="99" target="101">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="True" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="99" target="103">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="Was the session successfully deleted?" style="rhombus;whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1929.69" y="833.4399999999999" width="155.62" height="155.62" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="HTTP Exception 500&lt;br&gt;Could not find a session using the given refreshToken" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="1852.97" y="1057.5" width="309.06" height="47.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="" style="edgeStyle=none;html=1;strokeWidth=1;fontSize=14;endArrow=classic;endFill=1;" edge="1" parent="1" source="103" target="107">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="2468.4400000000005" y="913.44" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="103" value="Return message&lt;br&gt;Session successfully deleted" style="whiteSpace=wrap;html=1;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="2183.12" y="883.44" width="176.88" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="Return JSON with Message&lt;br&gt;&lt;br&gt;And set cookie&amp;nbsp;refresh_token maxAge: 0 and fun message :)" style="whiteSpace=wrap;html=1;rounded=1;spacing=9;" vertex="1" parent="1">
+                    <mxGeometry x="2420" y="862.97" width="200" height="100.94" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

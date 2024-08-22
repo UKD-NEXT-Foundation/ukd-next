@@ -1,16 +1,18 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
-import cookieParser from 'cookie-parser';
 import { json } from 'body-parser';
-import { AppModule } from '@app/src/app.module';
+import cookieParser from 'cookie-parser';
+
 import { Timer } from '@app/common/functions/timer';
+import { AppModule } from '@app/src/app.module';
 import {
   GlobalConfig,
   GlobalConfigType,
   corsConfig,
   createOpenApiDocument,
   swaggerCustomOptions,
+  validationPipeConfig,
 } from '@app/src/configs';
 
 async function bootstrap() {
@@ -21,7 +23,7 @@ async function bootstrap() {
   const config: GlobalConfigType = app.get(GlobalConfig);
 
   app.setGlobalPrefix(config.apiPrefix);
-  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe(validationPipeConfig));
   app.use(json({ limit: '10mb' }));
   app.use(cookieParser());
   app.enableCors(corsConfig);

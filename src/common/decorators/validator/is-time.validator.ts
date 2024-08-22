@@ -1,8 +1,8 @@
 import {
-  registerDecorator,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
+  registerDecorator,
 } from 'class-validator';
 
 @ValidatorConstraint({ name: 'isTime', async: false })

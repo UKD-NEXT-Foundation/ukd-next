@@ -15,5 +15,8 @@ export function config() {
     jwtRefreshTokenExpiresIn: ENV.JWT_REFRESH_TOKEN_EXPIRES_IN,
     googleClientId: ENV.GOOGLE_CLIENT_ID,
     googleClientSecret: ENV.GOOGLE_CLIENT_SECRET,
+    vapidEmail: ENV.VAPID_EMAIL,
+    vapidPublicKey: ENV.VAPID_PUBLIC_KEY,
+    vapidPrivateKey: ENV.VAPID_PRIVATE_KEY,
   } as const;
 }

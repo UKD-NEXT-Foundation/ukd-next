@@ -3,4 +3,4 @@ export * from './cors.config';
 export * from './create-openapi-document';
 export * from './global.config';
 export * from './swagger-custom-options';
-export * from './typeorm.config';
+export * from './validation-pipe.config';
