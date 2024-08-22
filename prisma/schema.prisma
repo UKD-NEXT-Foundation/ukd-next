@@ -7,20 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AuthSessionModel {
-  id                String    @id @default(uuid()) @db.Uuid
-  user              UserModel @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String    @db.Uuid
-  userAgent         String    @db.VarChar
-  refreshToken      String    @db.VarChar
-  expiresIn         DateTime  @db.Timestamp
-  lastTokenUpdateAt DateTime  @db.Timestamp
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  @@map("auth-sessions")
-}
-
 model DepartmentModel {
   id                 String        @id @default(uuid()) @db.Uuid
   name               String        @unique @db.VarChar
@@ -95,6 +81,20 @@ model NewsModel {
   @@map("news")
 }
 
+model NotificationModel {
+  id        String    @id @default(uuid()) @db.Uuid
+  user      UserModel @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String    @db.Uuid
+  title     String    @db.VarChar
+  message   String    @db.Text
+  isSilent  Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("notifications")
+}
+
 model ScheduleModel {
   id          String                   @id @default(uuid()) @db.Uuid
   date        DateTime                 @db.Date
@@ -125,28 +125,45 @@ model GroupsOnSchedulesModel {
   @@map("groups-on-schedules")
 }
 
+model SessionModel {
+  id                      String                @id @default(uuid()) @db.Uuid
+  user                    UserModel             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                  String                @db.Uuid
+  userAgent               String                @db.VarChar
+  ipAddress               String                @db.Inet
+  notificationProvider    NotificationProvider?
+  notificationCredentials String?               @db.VarChar
+  refreshTokenHash        String                @db.VarChar(64)
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  removedAt               DateTime?
+
+  @@map("sessions")
+}
+
 model UserModel {
-  id              String             @id @default(uuid()) @db.Uuid
-  email           String             @unique @db.VarChar
-  fullname        String             @db.VarChar
-  phone           String?            @db.VarChar
-  roles           Role[]             @default([STUDENT])
-  authProvider    AuthProvider
-  googleUserId    String?            @db.VarChar
-  languageCode    String?            @default("en") @db.VarChar
-  pictureURL      String?            @db.VarChar
-  group           GroupModel?        @relation("StudentGroup", fields: [groupId], references: [id])
-  groupId         String?            @db.Uuid
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
-  authSessions    AuthSessionModel[]
-  departments     DepartmentModel[]
-  curatorGroups   GroupModel[]       @relation("CuratorGroup")
-  leaderGroups    GroupModel[]       @relation("LeaderGroup")
-  teacherJournals JournalModel[]     @relation("TeacherJournal")
-  studentJournal  JournalModel[]     @relation("StudentJournal")
-  news            NewsModel[]
-  schedule        ScheduleModel[]
+  id                String              @id @default(uuid()) @db.Uuid
+  email             String              @unique @db.VarChar
+  fullname          String              @db.VarChar
+  phone             String?             @db.VarChar
+  roles             Role[]              @default([STUDENT])
+  authProvider      AuthProvider
+  googleUserId      String?             @db.VarChar
+  languageCode      String?             @default("en") @db.VarChar
+  pictureURL        String?             @db.VarChar
+  group             GroupModel?         @relation("StudentGroup", fields: [groupId], references: [id])
+  groupId           String?             @db.Uuid
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  authSessions      SessionModel[]
+  departments       DepartmentModel[]
+  curatorGroups     GroupModel[]        @relation("CuratorGroup")
+  leaderGroups      GroupModel[]        @relation("LeaderGroup")
+  teacherJournals   JournalModel[]      @relation("TeacherJournal")
+  studentJournal    JournalModel[]      @relation("StudentJournal")
+  news              NewsModel[]
+  schedule          ScheduleModel[]
+  notificationModel NotificationModel[]
 
   @@map("users")
 }
@@ -197,4 +214,8 @@ enum ScheduleType {
   CREDIT_WORK
   GROUP_SESSION
   INDIVIDUAL_MEETING
+}
+
+enum NotificationProvider {
+  WEB_PUSH
 }

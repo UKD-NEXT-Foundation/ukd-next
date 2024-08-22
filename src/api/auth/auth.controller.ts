@@ -16,15 +16,15 @@ import ms from 'ms';
 
 import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 
-import { AuthService } from './auth.service';
 import { AuthByGoogleTokenDto } from './dto/auth-by-google-token.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
+import { AuthService } from './services/auth.service';
 
 @ApiTags('Auth')
 @Controller('/auth')
 export class AuthController {
-  private readonly refreshTokenKeyName = 'refresh_token';
+  private readonly COOKIE_KEY = 'refresh_token';
 
   constructor(
     @Inject(GlobalConfig)
@@ -40,61 +40,66 @@ export class AuthController {
   @ApiOperation({ summary: 'Callback to sign in to Google' })
   @Get('/by/google/callback')
   @UseGuards(GoogleOAuthGuard)
-  async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
+  async googleCallback(@Req() req: Request, @Res() res: Response) {
     const profile = req.user as IGoogleProfile;
     const userAgent = req.headers['user-agent'];
+    const ipAddress = req.ip;
 
     if (!profile) {
       throw new UnauthorizedException('User profile not found');
     }
 
-    const tokens = await this.authService.signInByGoogle(profile, userAgent);
+    const tokens = await this.authService.signInByGoogleToken(profile, userAgent, ipAddress);
 
-    res.cookie(this.refreshTokenKeyName, tokens.refreshToken, {
-      maxAge: ms(this.config.jwtRefreshTokenExpiresIn),
-      httpOnly: true,
-    });
-    res.json(tokens);
+    res
+      .cookie(this.COOKIE_KEY, tokens.refreshToken, {
+        maxAge: ms(this.config.jwtRefreshTokenExpiresIn),
+        httpOnly: true,
+      })
+      .json(tokens);
   }
 
   @ApiOperation({ summary: 'Sign in with your Google access token' })
   @Post('/by/google')
-  async byGoogleToken(@Req() req: Request, @Body() payload: AuthByGoogleTokenDto, @Res() res: Response) {
-    const accessToken = payload.accessToken;
+  async byGoogleToken(@Body() { accessToken }: AuthByGoogleTokenDto, @Req() req: Request, @Res() res: Response) {
     const userAgent = req.headers['user-agent'];
+    const ipAddress = req.ip;
 
     const profile = await this.authService.verifyGoogleToken(accessToken);
-    const tokens = await this.authService.signInByGoogle(profile, userAgent);
+    const tokens = await this.authService.signInByGoogleToken(profile, userAgent, ipAddress);
 
-    res.cookie(this.refreshTokenKeyName, tokens.refreshToken, {
-      maxAge: ms(this.config.jwtRefreshTokenExpiresIn),
-      httpOnly: true,
-    });
-    res.json(tokens);
+    res
+      .cookie(this.COOKIE_KEY, tokens.refreshToken, {
+        maxAge: ms(this.config.jwtRefreshTokenExpiresIn),
+        httpOnly: true,
+      })
+      .json(tokens);
   }
 
   @ApiOperation({ summary: 'Refresh access token' })
   @Get('/refresh')
   async refresh(@Req() req: Request) {
-    const refreshToken = req.cookies[this.refreshTokenKeyName];
+    const refreshToken = req.cookies[this.COOKIE_KEY];
 
     if (!refreshToken) {
-      throw new ConflictException(`"${this.refreshTokenKeyName}" not found with cookie`);
+      throw new ConflictException(`Key: '${this.COOKIE_KEY}' not found in cookie`);
     }
 
-    return this.authService.updateSession(refreshToken);
+    return this.authService.refresh(refreshToken);
   }
 
   @ApiOperation({ summary: 'log out of the session' })
   @Get('/logout')
   async logout(@Req() req: Request, @Res() res: Response) {
-    const refreshToken = req.cookies[this.refreshTokenKeyName];
+    const refreshToken = req.cookies[this.COOKIE_KEY];
+    const funMessage = 'Hi, Mr.Hacker, what are you looking for? :3';
 
     if (!refreshToken) {
-      throw new ConflictException(`"${this.refreshTokenKeyName}" not found with cookie`);
+      throw new ConflictException(`Key: '${this.COOKIE_KEY}' not found in cookie`);
     }
 
-    res.cookie(this.refreshTokenKeyName, '', { maxAge: 0, httpOnly: true });
-    res.json(await this.authService.removeSession(refreshToken));
+    res
+      .cookie(this.COOKIE_KEY, funMessage, { maxAge: 0, httpOnly: true })
+      .json(await this.authService.logout(refreshToken));
   }
 }
