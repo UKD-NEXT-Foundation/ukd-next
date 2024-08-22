@@ -16,8 +16,12 @@ export class SessionsService {
     return this.sessions.create({ data: payload });
   }
 
-  async findAll(where?: Prisma.SessionModelWhereInput, hideNotificationCredentials = true) {
-    const sessions = await this.sessions.findMany({ where });
+  async findAll(
+    where?: Prisma.SessionModelWhereInput,
+    orderBy?: Prisma.SessionModelOrderByWithRelationInput,
+    hideNotificationCredentials = true,
+  ) {
+    const sessions = await this.sessions.findMany({ where, orderBy });
 
     if (hideNotificationCredentials) {
       return sessions.map((s) => ({ ...s, notificationCredentials: null }));

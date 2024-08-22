@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
 
+import { Timer } from '@app/common/functions/timer';
 import { IExpressRequest } from '@app/common/interfaces';
 import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 
@@ -15,6 +16,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
   use(request: IExpressRequest, response: Response, next: NextFunction): void {
     const { ip, method, originalUrl, body, user, sessionId } = request;
+    const timer = new Timer().start();
 
     const userInfo = {
       id: user?.id ?? null,
@@ -36,6 +38,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
         userInfo,
         body,
         fullError,
+        processingTime: timer.end().formattedResult(),
       });
 
       if (this.config.isDevelopmentEnvironment) {

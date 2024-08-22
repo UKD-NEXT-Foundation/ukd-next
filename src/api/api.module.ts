@@ -11,6 +11,7 @@ import { GroupsModule } from './groups/groups.module';
 import { JournalsModule } from './journals/journals.module';
 import { LessonsModule } from './lessons/lessons.module';
 import { NewsModule } from './news/news.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { SchedulesModule } from './schedules/schedules.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { UsersModule } from './users/users.module';
@@ -28,6 +29,7 @@ import { VariablesModule } from './variables/variables.module';
     UsersModule,
     JournalsModule,
     VariablesModule,
+    NotificationsModule,
     SessionsModule,
   ],
   providers: [
