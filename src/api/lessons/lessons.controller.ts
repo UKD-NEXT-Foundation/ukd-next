@@ -1,11 +1,18 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+import { UserRole } from '@app/common/enums';
+import { AuthGuard, RolesGuard } from '@app/common/guards';
+
+import { Roles } from '../auth/decorators';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { LessonsService } from './lessons.service';
 
+@ApiBearerAuth()
 @ApiTags('Lessons')
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
 @Controller('lessons')
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}

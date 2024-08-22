@@ -1,11 +1,29 @@
-import { Body, Controller, Delete, Get, Param, ParseArrayPipe, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseArrayPipe,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
+import { UserRole } from '@app/common/enums';
+import { AuthGuard, RolesGuard } from '@app/common/guards';
+
+import { Roles } from '../auth/decorators';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupsService } from './groups.service';
 
 @ApiTags('Groups')
+@ApiBearerAuth()
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
 @Controller('/groups')
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}

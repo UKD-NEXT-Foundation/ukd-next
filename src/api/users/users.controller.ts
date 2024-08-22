@@ -53,6 +53,7 @@ export class UsersController {
     return user;
   }
 
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Get(':id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.findOne({ id });

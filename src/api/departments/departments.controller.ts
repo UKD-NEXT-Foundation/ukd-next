@@ -1,11 +1,29 @@
-import { Body, Controller, Delete, Get, Param, ParseArrayPipe, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseArrayPipe,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 
+import { UserRole } from '@app/common/enums';
+import { AuthGuard, RolesGuard } from '@app/common/guards';
+
+import { Roles } from '../auth/decorators';
 import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
 
 @ApiTags('Departments')
+@ApiBearerAuth()
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
 @Controller('departments')
 export class DepartmentsController {
   constructor(private readonly departmentsService: DepartmentsService) {}

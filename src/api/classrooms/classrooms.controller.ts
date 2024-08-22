@@ -1,11 +1,18 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+import { UserRole } from '@app/common/enums';
+import { AuthGuard, RolesGuard } from '@app/common/guards';
+
+import { Roles } from '../auth/decorators';
 import { ClassroomsService } from './classrooms.service';
 import { CreateClassroomDto } from './dto/create-classroom.dto';
 import { UpdateClassroomDto } from './dto/update-classroom.dto';
 
 @ApiTags('Classrooms')
+@ApiBearerAuth()
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
 @Controller('/classrooms')
 export class ClassroomsController {
   constructor(private readonly classroomsService: ClassroomsService) {}
