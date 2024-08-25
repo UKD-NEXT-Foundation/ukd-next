@@ -9,4 +9,7 @@ export class FeatureFlags {
 
   @ApiProperty({ default: false })
   notificationServiceEnabled = false;
+
+  @ApiProperty({ default: false })
+  faqEnabled = false;
 }

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { NotificationModel } from '@prisma/client';
-import { IsBoolean, IsDateString, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class CreateNotificationDto implements Omit<NotificationModel, 'id' | 'readAt' | 'createdAt' | 'updatedAt'> {
   @ApiProperty()
