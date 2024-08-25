@@ -1087,6 +1087,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/graylog2@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@types/graylog2/-/graylog2-0.2.5.tgz#c21c03bef262778c9df3be0cce4eb94ebbd4758c"
+  integrity sha512-iiCbbkxJXGGfNhtrK20UOWWZunDjJsswBO77YNmapyMHhj+3oHmzq5iz5sUXlfbMfpob9ZWd8d4MYReCgwb+Yw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/http-errors@*":
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-2.0.4.tgz#7eb47726c391b7345a6ec35ad7f4de469cf5ba4f"
@@ -3035,6 +3042,11 @@ graphemer@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
+
+graylog2@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/graylog2/-/graylog2-0.2.1.tgz#fcb0775766fb6d7d6f5fef3ff873326b8b1d35a9"
+  integrity sha512-vjysakwOhrAqMeIvSK0WZcmzKvkpxY6pCfT9QqtdSVAidPFIynuin7adqbdFp9MCCTbTE402WIxvg8cph5OWTA==
 
 gtoken@^7.0.0:
   version "7.1.0"
