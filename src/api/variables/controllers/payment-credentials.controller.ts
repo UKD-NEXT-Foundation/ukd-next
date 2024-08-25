@@ -1,19 +1,19 @@
 import { Controller, Get, OnModuleInit } from '@nestjs/common';
-import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
+import { PAYMENT_CREDENTIALS_KEY } from '../default-keys/payment-credentials-key.const';
 import { PaymentCredentials } from '../default-values/payment-credentials.class';
+import { PaymentCredentialsResponseDto } from '../dto/payment-credentials-response.dto';
 import { VariablesService } from '../variables.service';
 
 @ApiTags('Payment credentials')
-@Controller('payment-credentials')
+@Controller('/payment-credentials')
 export class PaymentCredentialsController implements OnModuleInit {
   constructor(private readonly variablesService: VariablesService) {}
 
-  static readonly VARIABLE_KEY = 'PAYMENT_CREDENTIALS';
-
   async onModuleInit() {
     await this.variablesService.createDefault({
-      key: PaymentCredentialsController.VARIABLE_KEY,
+      key: PAYMENT_CREDENTIALS_KEY,
       value: JSON.stringify(new PaymentCredentials()),
     });
   }
@@ -21,17 +21,9 @@ export class PaymentCredentialsController implements OnModuleInit {
   @ApiOkResponse({ type: () => PaymentCredentialsResponseDto })
   @Get()
   async findAll() {
-    const key = PaymentCredentialsController.VARIABLE_KEY;
+    const key = PAYMENT_CREDENTIALS_KEY;
     const variable = await this.variablesService.findOne(key);
 
     return { key, value: JSON.parse(variable.value) };
   }
-}
-
-export class PaymentCredentialsResponseDto {
-  @ApiProperty({ default: PaymentCredentialsController.VARIABLE_KEY })
-  key: string;
-
-  @ApiProperty()
-  value: PaymentCredentials;
 }

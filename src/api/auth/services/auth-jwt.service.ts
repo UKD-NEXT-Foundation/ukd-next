@@ -17,7 +17,7 @@ export class AuthJWTService {
     try {
       const results = await this.jwtService.verifyAsync(accessToken, { secret: this.config.jwtAccessTokenSecret });
       return results;
-    } catch (_error) {
+    } catch {
       throw new UnauthorizedException('Invalid access token');
     }
   }
@@ -26,7 +26,7 @@ export class AuthJWTService {
     try {
       const results = await this.jwtService.verifyAsync(refreshToken, { secret: this.config.jwtRefreshTokenSecret });
       return results;
-    } catch (_error) {
+    } catch {
       throw new UnauthorizedException('Invalid refresh token');
     }
   }

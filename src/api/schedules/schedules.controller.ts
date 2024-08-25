@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   ParseArrayPipe,
   ParseUUIDPipe,
@@ -11,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModel } from '@prisma/client';
 
 import { OptionalUser, Roles } from '@app/common/decorators';
@@ -20,6 +21,7 @@ import { AuthGuard, RolesGuard } from '@app/common/guards';
 
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { FindScheduleDto } from './dto/find-schedule.dto';
+import { ScheduleResponseDto } from './dto/schedule-response.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { SchedulesService } from './schedules.service';
 
@@ -29,6 +31,7 @@ import { SchedulesService } from './schedules.service';
 export class SchedulesController {
   constructor(private readonly schedulesService: SchedulesService) {}
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.CREATED })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Post()
@@ -36,6 +39,7 @@ export class SchedulesController {
     return this.schedulesService.create(payload);
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.CREATED, isArray: true })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Post('/many')
@@ -43,7 +47,7 @@ export class SchedulesController {
     return this.schedulesService.createMany(payloads);
   }
 
-  @ApiBearerAuth()
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK, isArray: true })
   @Get()
   async findAll(@Query() query: FindScheduleDto, @OptionalUser() user: UserModel | null) {
     if (user?.groupId && !query?.groupId) {
@@ -53,13 +57,15 @@ export class SchedulesController {
     return this.schedulesService.findAll(query);
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
-  @Get(':id')
+  @Get('/:id')
   findOne(@Param('id', ParseUUIDPipe) id: string) {
     return this.schedulesService.findOne(id);
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Patch()
@@ -67,6 +73,7 @@ export class SchedulesController {
     return this.schedulesService.update(payload);
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK, isArray: true })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @ApiBody({ type: UpdateScheduleDto, isArray: true })
@@ -75,13 +82,15 @@ export class SchedulesController {
     return Promise.all(payloads.map(this.schedulesService.update));
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
-  @Delete(':id')
+  @Delete('/:id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.schedulesService.removeMany([id]);
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK, isArray: true })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @ApiBody({ type: Number, isArray: true })

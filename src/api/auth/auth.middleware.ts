@@ -28,7 +28,7 @@ export class AuthMiddleware implements NestMiddleware {
 
       req.user = user;
       req.sessionId = jwtPayload.sessionId;
-    } catch (_) {}
+    } catch {}
 
     next();
   }
