@@ -18,5 +18,7 @@ export function config() {
     vapidEmail: ENV.VAPID_EMAIL,
     vapidPublicKey: ENV.VAPID_PUBLIC_KEY,
     vapidPrivateKey: ENV.VAPID_PRIVATE_KEY,
+    graylogHost: ENV.GRAYLOG_HOST,
+    graylogPort: Number(ENV.GRAYLOG_PORT),
   } as const;
 }

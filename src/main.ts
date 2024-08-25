@@ -1,5 +1,6 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule } from '@nestjs/swagger';
 import { json } from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -19,9 +20,10 @@ async function bootstrap() {
   const timer = new Timer().start();
   const logger = new Logger('Bootstrap');
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const config: GlobalConfigType = app.get(GlobalConfig);
 
+  app.set('trust proxy', true);
   app.setGlobalPrefix(config.apiPrefix);
   app.useGlobalPipes(new ValidationPipe(validationPipeConfig));
   app.use(json({ limit: '10mb' }));

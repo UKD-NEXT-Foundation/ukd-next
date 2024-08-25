@@ -1,18 +1,26 @@
-import { Inject, Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, Logger, NestMiddleware, OnModuleDestroy } from '@nestjs/common';
 import { NextFunction, Response } from 'express';
+import { graylog as GraylogLogger } from 'graylog2';
 
 import { Timer } from '@app/common/functions/timer';
 import { IExpressRequest } from '@app/common/interfaces';
 import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 
 @Injectable()
-export class HttpLoggerMiddleware implements NestMiddleware {
-  private readonly logger = new Logger('HttpLoggerMiddleware');
+export class HttpLoggerMiddleware implements NestMiddleware, OnModuleDestroy {
+  private readonly logger: Logger | GraylogLogger;
 
-  constructor(
-    @Inject(GlobalConfig)
-    private readonly config: GlobalConfigType,
-  ) {}
+  constructor(@Inject(GlobalConfig) private readonly config: GlobalConfigType) {
+    if (this.config.isDevelopmentEnvironment) {
+      this.logger = new Logger('HttpLoggerMiddleware');
+    } else {
+      this.logger = new GraylogLogger({
+        servers: [{ host: config.graylogHost, port: this.config.graylogPort }],
+        facility: 'ukd-next--backend',
+        hostname: this.config.domain,
+      });
+    }
+  }
 
   use(request: IExpressRequest, response: Response, next: NextFunction): void {
     const { ip, method, originalUrl, body, user, sessionId } = request;
@@ -29,7 +37,7 @@ export class HttpLoggerMiddleware implements NestMiddleware {
 
     response.on('finish', () => {
       const { statusCode } = response;
-      const fullError = response['fullError'] ?? null;
+      const error = response['fullError'] ?? null;
 
       const logMessage = JSON.stringify({
         statusCode,
@@ -37,21 +45,26 @@ export class HttpLoggerMiddleware implements NestMiddleware {
         originalUrl,
         userInfo,
         body,
-        fullError,
-        processingTime: timer.end().formattedResult(),
+        error,
+        time: timer.end().formattedResult(),
       });
 
-      if (this.config.isDevelopmentEnvironment) {
-        if (statusCode >= 500) {
-          this.logger.error(logMessage + fullError);
-        } else if (statusCode >= 400) {
-          this.logger.warn(logMessage);
-        } else {
-          this.logger.log(logMessage);
-        }
+      if (statusCode >= 500) {
+        if (this.config.isDevelopmentEnvironment) this.logger.error(error);
+        this.logger.error(logMessage);
+      } else if (statusCode >= 400) {
+        this.logger.warn(logMessage);
+      } else {
+        this.logger.log(logMessage);
       }
     });
 
     next();
+  }
+
+  onModuleDestroy() {
+    if (!this.config.isDevelopmentEnvironment) {
+      (this.logger as GraylogLogger).close();
+    }
   }
 }

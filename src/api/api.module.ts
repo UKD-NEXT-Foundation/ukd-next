@@ -2,7 +2,7 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { PrismaExceptionFilter } from '@app/common/filters';
-import { AuthMiddleware, CloudflareMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
+import { AuthMiddleware, HttpLoggerMiddleware } from '@app/common/middlewares';
 
 import { AuthModule } from './auth/auth.module';
 import { ClassroomsModule } from './classrooms/classrooms.module';
@@ -41,7 +41,6 @@ import { VariablesModule } from './variables/variables.module';
 })
 export class ApiModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(CloudflareMiddleware).forRoutes('*');
     consumer.apply(AuthMiddleware).forRoutes('*');
     consumer.apply(HttpLoggerMiddleware).forRoutes('*');
   }
