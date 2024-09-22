@@ -20,8 +20,7 @@ export class SchedulesService {
   }
 
   createMany(payloads: CreateScheduleDto[]) {
-    const data = payloads.map(this.prepareDataForCreation);
-    return this.schedules.createManyAndReturn({ data });
+    return Promise.all(payloads.map(this.create.bind(this)));
   }
 
   async findAll(findOptions?: FindScheduleDto) {
@@ -36,8 +35,9 @@ export class SchedulesService {
     }
 
     const where: Prisma.ScheduleModelWhereInput = {
-      teacherId: findOptions.teacherId && !findOptions.findAll ? findOptions.teacherId : undefined,
+      groups: findOptions.groupId && !findOptions.findAll ? { some: { id: findOptions.groupId } } : undefined,
       classroomId: findOptions.classroomId && !findOptions.findAll ? findOptions.classroomId : undefined,
+      teacherId: findOptions.teacherId && !findOptions.findAll ? findOptions.teacherId : undefined,
       lessonId: findOptions.lessonId && !findOptions.findAll ? findOptions.lessonId : undefined,
       date:
         findOptions.from || findOptions.to
@@ -46,36 +46,32 @@ export class SchedulesService {
               lte: findOptions.to,
             }
           : undefined,
-      groups: findOptions.groupId && !findOptions.findAll ? { some: { groupId: findOptions.groupId } } : undefined, // groupId is used instead of id
     };
 
-    return this.schedules.findMany({
-      where,
-      orderBy: [{ date: 'asc' }, { startAt: 'asc' }],
-      select: {
-        id: true,
-        date: true,
-        startAt: true,
-        endAt: true,
-        type: true,
-        createdAt: true,
-        updatedAt: true,
-        isCanceled: true,
-        ...(findOptions.onlyIds
-          ? {
-              lessonId: true,
-              teacherId: true,
-              classroomId: true,
-              groups: { select: { groupId: true } },
-            }
-          : {
-              lesson: { select: { id: true, name: true } },
-              teacher: { select: { id: true, fullname: true, email: true } },
-              classroom: { select: { id: true, name: true, isOnline: true, onlineLink: true } },
-              groups: { select: { group: { select: { id: true, name: true } } } },
-            }),
-      },
-    });
+    const select: Prisma.ScheduleModelSelect = {
+      id: true,
+      date: true,
+      startAt: true,
+      endAt: true,
+      type: true,
+      createdAt: true,
+      updatedAt: true,
+      isCanceled: true,
+    };
+
+    if (findOptions.onlyIds) {
+      select.lessonId = true;
+      select.teacherId = true;
+      select.classroomId = true;
+      select.groups = { select: { id: true } };
+    } else {
+      select.lesson = { select: { id: true, name: true } };
+      select.teacher = { select: { id: true, fullname: true, email: true } };
+      select.classroom = { select: { id: true, name: true, isOnline: true, onlineLink: true } };
+      select.groups = { select: { id: true, name: true } };
+    }
+
+    return this.schedules.findMany({ select, where, orderBy: [{ date: 'asc' }, { startAt: 'asc' }] });
   }
 
   findOne(id: string) {
@@ -102,6 +98,9 @@ export class SchedulesService {
     if (new Date(`1970-01-01T${payload.startAt}`) > new Date(`1970-01-01T${payload.endAt}`)) {
       throw new ConflictException('endAt must not be less than startAt');
     }
+
+    payload['groups'] = { connect: payload.groupIds.map((id) => ({ id })) };
+    delete payload.groupIds;
 
     return { ...payload, id: uuidv7() };
   }

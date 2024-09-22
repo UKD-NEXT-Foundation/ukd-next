@@ -87,17 +87,17 @@ export class JournalsController {
     return Promise.all(payloads.map(this.journalsService.update));
   }
 
+  @ApiResponse({ type: JournalResponseDto, status: HttpStatus.OK, isArray: true })
+  @Roles(UserRole.Teacher, UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
+  @Delete('/many')
+  removeMany(@Body(new ParseArrayPipe({ items: ParseUUIDPipe })) ids: string[]) {
+    return this.journalsService.removeMany(ids);
+  }
+
   @ApiResponse({ type: JournalResponseDto, status: HttpStatus.OK })
   @Roles(UserRole.Teacher, UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Delete('/:id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.journalsService.removeMany([id]);
-  }
-
-  @ApiResponse({ type: JournalResponseDto, status: HttpStatus.OK, isArray: true })
-  @Roles(UserRole.Teacher, UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
-  @Delete('/many')
-  removeMany(@Body() ids: string[]) {
-    return this.journalsService.removeMany(ids);
   }
 }

@@ -25,14 +25,14 @@ export class FindScheduleDto {
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Type(() => Date)
   @IsDate()
+  @Type(() => Date)
   from?: Date;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @Type(() => Date)
   @IsDate()
+  @Type(() => Date)
   to?: Date;
 
   @ApiPropertyOptional({ default: false })

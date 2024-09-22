@@ -34,17 +34,21 @@ export class CreateScheduleDto implements Omit<ScheduleModel, 'id' | 'createdAt'
   classroomId!: string | null;
 
   @ApiProperty()
-  @Type(() => Date)
+  @IsUUID('7', { each: true })
+  groupIds: string[];
+
+  @ApiProperty()
   @IsDate()
+  @Type(() => Date)
   date!: Date;
 
   @ApiProperty({ example: '10:00' })
   @IsTime()
   @Transform(({ value }) => formatTime(value))
-  startAt!: Date;
+  startAt!: string;
 
   @ApiProperty({ example: '11:20' })
   @IsTime()
   @Transform(({ value }) => formatTime(value))
-  endAt!: Date;
+  endAt!: string;
 }

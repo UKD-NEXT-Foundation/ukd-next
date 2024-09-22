@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Prisma } from '@prisma/client';
 
 import { Roles, User } from '@app/common/decorators';
 import { AuthGuard, RolesGuard } from '@app/common/guards';
@@ -50,7 +51,13 @@ export class UsersController {
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Get()
   findAll(@Query() query: FindAllUsersDto) {
-    return this.usersService.findAll(query);
+    const newQuery: Prisma.UserModelWhereInput = {};
+    if (query.role) {
+      newQuery.roles = { has: query.role };
+      delete query.role;
+    }
+
+    return this.usersService.findAll({ ...query, ...newQuery });
   }
 
   @ApiResponse({ type: UserResponseDto, status: HttpStatus.OK })

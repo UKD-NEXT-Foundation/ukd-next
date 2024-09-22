@@ -37,20 +37,20 @@ model DepartmentModel {
 }
 
 model GroupModel {
-  id                       String                   @id @default(uuid()) @db.Uuid
-  name                     String                   @db.VarChar
-  leader                   UserModel?               @relation("LeaderGroup", fields: [leaderId], references: [id])
-  leaderId                 String?                  @db.Uuid
-  curator                  UserModel?               @relation("CuratorGroup", fields: [curatorId], references: [id])
-  curatorId                String?                  @db.Uuid
-  department               DepartmentModel?         @relation(fields: [departmentId], references: [id])
-  departmentId             String?                  @db.Uuid
-  googleSheetsURL          String?                  @db.VarChar
-  checksumOfJournalContent String                   @default("") @db.VarChar
-  createdAt                DateTime                 @default(now())
-  updatedAt                DateTime                 @updatedAt
-  students                 UserModel[]              @relation("StudentGroup")
-  schedules                GroupsOnSchedulesModel[]
+  id                       String           @id @default(uuid()) @db.Uuid
+  name                     String           @db.VarChar
+  leader                   UserModel?       @relation("LeaderGroup", fields: [leaderId], references: [id])
+  leaderId                 String?          @db.Uuid
+  curator                  UserModel?       @relation("CuratorGroup", fields: [curatorId], references: [id])
+  curatorId                String?          @db.Uuid
+  department               DepartmentModel? @relation(fields: [departmentId], references: [id])
+  departmentId             String?          @db.Uuid
+  googleSheetsURL          String?          @db.VarChar
+  checksumOfJournalContent String           @default("") @db.VarChar
+  createdAt                DateTime         @default(now())
+  updatedAt                DateTime         @updatedAt
+  students                 UserModel[]      @relation("StudentGroup")
+  schedules                ScheduleModel[]  @relation(name: "groups-on-schedules")
 
   @@map("groups")
 }
@@ -112,33 +112,23 @@ model NotificationModel {
 }
 
 model ScheduleModel {
-  id          String                   @id @default(uuid()) @db.Uuid
-  date        DateTime                 @db.Date
-  startAt     DateTime                 @db.Time
-  endAt       DateTime                 @db.Time
-  type        ScheduleType?            @default(LECTURE)
-  isCanceled  Boolean                  @default(false)
-  lesson      LessonModel              @relation(fields: [lessonId], references: [id])
-  lessonId    String                   @db.Uuid
-  teacher     UserModel?               @relation(fields: [teacherId], references: [id])
-  teacherId   String?                  @db.Uuid
-  classroom   ClassroomModel?          @relation(fields: [classroomId], references: [id])
-  classroomId String?                  @db.Uuid
-  createdAt   DateTime                 @default(now())
-  updatedAt   DateTime                 @updatedAt
-  groups      GroupsOnSchedulesModel[]
+  id          String          @id @default(uuid()) @db.Uuid
+  date        DateTime        @db.Date
+  startAt     String          @db.VarChar(5)
+  endAt       String          @db.VarChar(5)
+  type        ScheduleType?   @default(LECTURE)
+  isCanceled  Boolean         @default(false)
+  lesson      LessonModel     @relation(fields: [lessonId], references: [id])
+  lessonId    String          @db.Uuid
+  teacher     UserModel?      @relation(fields: [teacherId], references: [id])
+  teacherId   String?         @db.Uuid
+  classroom   ClassroomModel? @relation(fields: [classroomId], references: [id])
+  classroomId String?         @db.Uuid
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  groups      GroupModel[]    @relation(name: "groups-on-schedules")
 
   @@map("schedules")
-}
-
-model GroupsOnSchedulesModel {
-  schedule   ScheduleModel @relation(fields: [scheduleId], references: [id])
-  scheduleId String        @db.Uuid
-  group      GroupModel    @relation(fields: [groupId], references: [id])
-  groupId    String        @db.Uuid
-
-  @@id([scheduleId, groupId])
-  @@map("groups-on-schedules")
 }
 
 model SessionModel {

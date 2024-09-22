@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserModel } from '@prisma/client';
+import { Role, UserModel } from '@prisma/client';
 
 import { OptionalUser, Roles } from '@app/common/decorators';
 import { UserRole } from '@app/common/enums';
@@ -50,8 +50,14 @@ export class SchedulesController {
   @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK, isArray: true })
   @Get()
   async findAll(@Query() query: FindScheduleDto, @OptionalUser() user: UserModel | null) {
-    if (user?.groupId && !query?.groupId) {
-      query.groupId = user.groupId;
+    if (!query?.teacherId && !query?.groupId) {
+      if (user?.roles?.includes(Role.STUDENT) && user?.groupId) {
+        query.groupId = user.groupId;
+      }
+
+      if (user?.roles?.includes(Role.TEACHER) && !query?.teacherId) {
+        query.teacherId = user.id;
+      }
     }
 
     return this.schedulesService.findAll(query);
@@ -82,20 +88,20 @@ export class SchedulesController {
     return Promise.all(payloads.map(this.schedulesService.update));
   }
 
+  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK, isArray: true })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
+  @ApiBody({ type: String, isArray: true })
+  @Delete('/many')
+  removeMany(@Body(new ParseArrayPipe({ items: ParseUUIDPipe })) ids: string[]) {
+    return this.schedulesService.removeMany(ids);
+  }
+
   @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
   @Delete('/:id')
   remove(@Param('id', ParseUUIDPipe) id: string) {
     return this.schedulesService.removeMany([id]);
-  }
-
-  @ApiResponse({ type: ScheduleResponseDto, status: HttpStatus.OK, isArray: true })
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(UserRole.Moderator, UserRole.Administrator, UserRole.APIService)
-  @ApiBody({ type: Number, isArray: true })
-  @Delete('/many')
-  removeMany(@Body() ids: string[]) {
-    return this.schedulesService.removeMany(ids);
   }
 }

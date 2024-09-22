@@ -9,10 +9,10 @@ export class ScheduleResponseDto implements ScheduleModel {
   date: Date;
 
   @ApiProperty()
-  startAt: Date;
+  startAt: string;
 
   @ApiProperty()
-  endAt: Date;
+  endAt: string;
 
   @ApiProperty({ enum: ScheduleType, default: ScheduleType.LECTURE })
   type: ScheduleType | null;
