@@ -10,13 +10,14 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import ms from 'ms';
 
 import { GlobalConfig, GlobalConfigType } from '@app/src/configs';
 
 import { AuthByGoogleTokenDto } from './dto/auth-by-google-token.dto';
+import { ResponseKeyDto } from './dto/response-key.dto';
 import { GoogleOAuthGuard } from './guards/google-oauth.guard';
 import { IGoogleProfile } from './interfaces/google-profile.interface';
 import { AuthService } from './services/auth.service';
@@ -74,6 +75,13 @@ export class AuthController {
         httpOnly: true,
       })
       .json(tokens);
+  }
+
+  @ApiOperation({ summary: 'Get google client id' })
+  @ApiOkResponse({ type: ResponseKeyDto })
+  @Get('/google-client-id')
+  getGoogleClientId(): ResponseKeyDto {
+    return { key: this.config.googleClientId };
   }
 
   @ApiOperation({ summary: 'Refresh access token' })
